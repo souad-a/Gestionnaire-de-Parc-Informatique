@@ -1,133 +1,138 @@
-# Gestionnaire-de-Parc-Informatique
+# 🖥️ Gestionnaire de Parc Informatique
 
-🎯 Objectif
+## 🎯 Objectif du Projet
 
-Permettre au service IT de :
+Développer une **application web complète** permettant au service IT de gérer efficacement le parc informatique de l'entreprise.
 
-Gérer les catégories d’équipements 🖥️
+### 📋 Fonctionnalités Principales
+- **Gestion centralisée** des équipements informatiques 🖥️
+- **Suivi précis** des affectations aux employés 👥
+- **Tableaux de bord** pour la prise de décision 📊
+- **Historique complet** des mouvements d'équipements 📝
 
-Suivre les employés et leurs affectations 👥
+## 🛠️ Stack Technique
 
-Visualiser les statistiques et l’état du parc 📊
+| Couche | Technologies |
+|--------|--------------|
+| **Backend** | Java EE, Servlets, Hibernate ORM, JAX-RS |
+| **Frontend** | JSP, JSTL, Bootstrap 5, Chart.js, DataTables |
+| **Base de données** | MySQL 8.0+ |
+| **Build Tool** | Apache Maven 3.6+ |
+| **Serveur** | Apache Tomcat 9.x |
+| **Sécurité** | Filters Java, BCrypt, Session Management |
+| **Logging** | Log4j2 |
 
-🛠️ Stack Technique
-Type	Technologies
-Backend	Java EE, Servlets, Hibernate
-Frontend	JSP, JSTL, Bootstrap 5
-Base de données	MySQL
-Build Tool	Maven
-Serveur d’application	Apache Tomcat 9+
-👥 Équipe de Développement
-Membre	Rôle	Modules
-🧩 Agourar Souad	Backend & Sécurité	Authentification, Utilisateurs
-🎨 Mesad El Ayam Hafida	Frontend & Data	Catégories, Employés, Équipements
-📁 Structure du Projet
+## 👥 Équipe de Développement
+
+| Membre | Rôle Principal | Modules Responsables |
+|--------|----------------|---------------------|
+| **Agourar Souad** | Backend & Sécurité | Authentification, Gestion des Utilisateurs, Sécurité API |
+| **Mesad El Ayam Hafida** | Frontend & Data | Catégories, Employés, Équipements, Dashboard |
+
+## 📁 Architecture du Projet
+gestionnaire-parc-informatique/
 ├── src/
-│   ├── main/
-│   │   ├── java/           # Classes Java métier (controllers, services, entities, etc.)
-│   │   ├── resources/      # Fichiers de configuration (hibernate.cfg.xml, etc.)
-│   │   └── webapp/
-│   │       ├── WEB-INF/
-│   │       │   └── web.xml
-│   │       ├── index.jsp
-│   │       └── assets/     # JSP, HTML, CSS, JS, images
-│   └── test/
-│       ├── java/           # Tests unitaires et d’intégration
-│       └── resources/      # Configurations de test
-├── pom.xml                 # Configuration Maven (dépendances, plugins)
-├── README.md               # Documentation du projet
-└── .gitignore              # Fichiers/dossiers ignorés par Git
+│ ├── main/
+│ │ ├── java/
+│ │ │ └── com/parcinformatique/
+│ │ │ ├── controller/ # Servlets & Contrôleurs
+│ │ │ ├── service/ # Logique métier
+│ │ │ ├── repository/ # Couche d'accès aux données
+│ │ │ ├── entity/ # Entités JPA
+│ │ │ ├── dto/ # Data Transfer Objects
+│ │ │ ├── filter/ # Filtres de sécurité
+│ │ │ └── config/ # Configuration Hibernate
+│ │ ├── resources/
+│ │ │ ├── hibernate.cfg.xml
+│ │ │ ├── log4j2.xml
+│ │ │ └── database/ # Scripts SQL
+│ │ └── webapp/
+│ │ ├── WEB-INF/
+│ │ │ ├── web.xml
+│ │ │ └── views/ # Pages JSP sécurisées
+│ │ ├── assets/
+│ │ │ ├── css/ # Styles Bootstrap
+│ │ │ ├── js/ # JavaScript custom
+│ │ │ ├── images/ # Images & icônes
+│ │ │ └── lib/ # Dépendances frontend
+│ │ ├── index.jsp
+│ │ └── login.jsp
+│ └── test/
+│ ├── java/ # Tests unitaires
+│ └── resources/ # Configurations de test
+├── pom.xml
+├── README.md
+├── .gitignore
+└── requirements.md
 
-📊 Fonctionnalités
-✅ Phase 1 – MVP (Minimum Viable Product)
+text
 
-🔐 Authentification sécurisée
+## 🚀 Roadmap de Développement
 
-👥 Gestion des rôles (Admin / Technicien)
+### ✅ Phase 1 – MVP (Minimum Viable Product)
+- [x] Système d'authentification sécurisé
+- [x] Gestion des rôles (Admin / Technicien)
+- [x] CRUD complet des catégories d'équipements
+- [x] CRUD complet des employés
+- [x] Interface responsive avec Bootstrap 5
 
-🗂️ CRUD Catégories d’équipements
+### 🔄 Phase 2 – En Cours de Développement
+- [ ] CRUD complet des équipements informatiques
+- [ ] Système d'affectation Équipement ↔ Employé
+- [ ] Historique détaillé des affectations
+- [ ] Tableau de bord avec indicateurs clés
 
-👤 CRUD Employés
+### 📅 Phase 3 – Planifiée
+- [ ] Génération automatique de rapports PDF
+- [ ] Système de notifications par email
+- [ ] Recherche avancée et filtres
+- [ ] Application mobile companion
 
-💎 Interface responsive (Bootstrap 5)
+## 🗃️ Modèle de Données
 
-🔄 Phase 2 – En développement
+### Entités Principales
 
-💻 Gestion des équipements (CRUD complet)
+| Entité | Description | Attributs Clés |
+|--------|-------------|----------------|
+| **User** | Comptes d'accès | id, username, password, role, active |
+| **Employee** | Informations employés | id, firstName, lastName, email, department |
+| **Category** | Classification équipements | id, name, description, specifications |
+| **Equipment** | Équipements informatiques | id, serialNumber, brand, model, status |
+| **Assignment** | Historique affectations | id, assignmentDate, returnDate, notes |
 
-🔗 Système d’affectation Équipement ↔ Employé
+### Relations entre Entités
+- User (1) → (*) Equipment
+- Employee (1) ←→ (*) Equipment via Assignment
+- Category (1) → (*) Equipment
 
-🕓 Historique des affectations
+## 🤝 Guide de Contribution
 
-📈 Tableau de bord statistiques
+### Conventions de Commits
 
-🚀 Phase 3 – Futures Améliorations
+| Type | Usage |
+|------|-------|
+| **feat** | Nouvelle fonctionnalité |
+| **fix** | Correction de bug |
+| **docs** | Documentation |
+| **style** | Formatage / CSS |
+| **refactor** | Refactorisation |
 
-🧾 Génération de rapports PDF automatiques
-
-✉️ Notifications par email
-
-🗃️ Modèle de Données
-Entités principales
-Entité	Description
-User	Gestion des comptes et authentification
-Employee	Informations des employés
-Category	Catégories d’équipements
-Equipment	Données sur les équipements informatiques
-Assignment	Historique des affectations entre employés et équipements
-Relations
-
-User (1) → (*) Equipment : Gestion des équipements
-
-Employee (1) ←→ (*) Equipment via Assignment (ManyToMany)
-
-Category (1) → (*) Equipment : Classification des matériels
-
-🤝 Guide de Contribution
-🧩 Conventions de commits
-git commit -m "feat: ajout gestion des catégories"
+**Exemples :**
+bash
+git commit -m "feat: ajout gestion des catégories avec validation"
 git commit -m "fix: correction bug suppression employé"
-git commit -m "docs: mise à jour README"
+Workflow de Développement
+Création de branche :
 
-Types de commits
-Type	Signification
-feat	Nouvelle fonctionnalité
-fix	Correction de bug
-docs	Mise à jour de la documentation
-style	Formatage / indentation
-refactor	Amélioration du code sans changement fonctionnel
-test	Ajout ou modification de tests
-🔄 Workflow de Développement
+bash
+git checkout -b feature/nom-fonctionnalite
+Commits réguliers :
 
-Création de branche pour chaque fonctionnalité :
-
-# Membre 1 - Authentification
-git checkout -b feature/auth-users
-
-# Membre 2 - Catégories & Employés
-git checkout -b feature/categories-employees
-
-
-Commits réguliers (au moins 1 par jour) :
-
+bash
 git add .
-git commit -m "feat: entité Category avec validation"
-git push origin feature/categories-employees
-
-
-Synchronisation quotidienne :
-
-git fetch origin
-git merge origin/develop
-
-
-Revue de code mutuelle :
-
-Chaque Pull Request est revue par l’autre membre.
-
-Validation avant merge.
-
-Résolution des conflits en collaboration.
+git commit -m "feat: implémentation entité Category"
+git push origin feature/nom-fonctionnalite
+Revue de code obligatoire avant merge
 
 🧾 Checklist de Revue de Code
 
