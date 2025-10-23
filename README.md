@@ -30,43 +30,23 @@ Développer une **application web complète** permettant au service IT de gérer
 | **Mesad El Ayam Hafida** | Frontend & Data | Catégories, Employés, Équipements, Dashboard |
 
 ## 📁 Architecture du Projet
-gestionnaire-parc-informatique/
+```
 ├── src/
-│ ├── main/
-│ │ ├── java/
-│ │ │ └── com/parcinformatique/
-│ │ │ ├── controller/ # Servlets & Contrôleurs
-│ │ │ ├── service/ # Logique métier
-│ │ │ ├── repository/ # Couche d'accès aux données
-│ │ │ ├── entity/ # Entités JPA
-│ │ │ ├── dto/ # Data Transfer Objects
-│ │ │ ├── filter/ # Filtres de sécurité
-│ │ │ └── config/ # Configuration Hibernate
-│ │ ├── resources/
-│ │ │ ├── hibernate.cfg.xml
-│ │ │ ├── log4j2.xml
-│ │ │ └── database/ # Scripts SQL
-│ │ └── webapp/
-│ │ ├── WEB-INF/
-│ │ │ ├── web.xml
-│ │ │ └── views/ # Pages JSP sécurisées
-│ │ ├── assets/
-│ │ │ ├── css/ # Styles Bootstrap
-│ │ │ ├── js/ # JavaScript custom
-│ │ │ ├── images/ # Images & icônes
-│ │ │ └── lib/ # Dépendances frontend
-│ │ ├── index.jsp
-│ │ └── login.jsp
-│ └── test/
-│ ├── java/ # Tests unitaires
-│ └── resources/ # Configurations de test
-├── pom.xml
-├── README.md
-├── .gitignore
-└── requirements.md
+│   ├── main/
+│   │   ├── java/               → Classes Java (controllers, services, entities, etc.)
+│   │   ├── resources/          → Fichiers de configuration (hibernate.cfg.xml, etc.)
+│   │   └── webapp/             → Interface utilisateur (JSP, CSS, JS)
+│   │       ├── WEB-INF/        → Fichiers sécurisés (web.xml, JSP protégés)
+│   │       ├── index.jsp       → Page d’accueil
+│   │       └── assets/         → Ressources front-end (CSS, JS, images)
+│   └── test/
+│       ├── java/               → Tests unitaires et d’intégration
+│       └── resources/          → Configurations spécifiques aux tests
+├── pom.xml                     → Fichier Maven (dépendances, build)
+├── README.md                   → Documentation du projet
+└── .gitignore                  → Fichiers/dossiers ignorés par Git
 
-text
-
+```
 ## 🚀 Roadmap de Développement
 
 ### ✅ Phase 1 – MVP (Minimum Viable Product)
@@ -118,22 +98,25 @@ text
 | **refactor** | Refactorisation |
 
 **Exemples :**
+```
 bash
 git commit -m "feat: ajout gestion des catégories avec validation"
 git commit -m "fix: correction bug suppression employé"
+```
 Workflow de Développement
 Création de branche :
-
+```
 bash
 git checkout -b feature/nom-fonctionnalite
+```
 Commits réguliers :
-
+```
 bash
 git add .
 git commit -m "feat: implémentation entité Category"
 git push origin feature/nom-fonctionnalite
 Revue de code obligatoire avant merge
-
+```
 🧾 Checklist de Revue de Code
 
 ✅ Le code compile sans erreurs
