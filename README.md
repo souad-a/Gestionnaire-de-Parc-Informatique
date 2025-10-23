@@ -1,5 +1,4 @@
 # Gestionnaire-de-Parc-Informatique
-# 🖥️ Gestionnaire de Parc Informatique
 
 ## 📋 Description
 Application web de gestion de parc informatique développée en JEE avec Servlet, JSP et Hibernate pour le compte d'un service informatique d'entreprise.
