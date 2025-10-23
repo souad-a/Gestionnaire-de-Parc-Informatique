@@ -1,60 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.ensa.parcinfo</groupId>
-    <artifactId>gestion-parc-informatique</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    
+    <groupId>com.parcinformatique</groupId>
+    <artifactId>gestionnaire-parc-informatique</artifactId>
+    <version>1.0.0</version>
     <packaging>war</packaging>
-
+    
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        
+        <!-- Versions des dépendances -->
+        <servlet.api.version>4.0.1</servlet.api.version>
+        <jsp.api.version>2.3.3</jsp.api.version>
+        <jstl.version>1.2.1</jstl.version>
+        <hibernate.version>5.6.5.Final</hibernate.version>
+        <mysql.version>8.0.28</mysql.version>
+        <junit.version>4.13.2</junit.version>
+    </properties>
+    
     <dependencies>
         <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>${servlet.api.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        
         <!-- JSP API -->
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
-            <version>2.3.3</version>
+            <version>${jsp.api.version}</version>
             <scope>provided</scope>
         </dependency>
-
+        
         <!-- JSTL -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>jstl</artifactId>
-            <version>1.2</version>
+            <version>${jstl.version}</version>
         </dependency>
-
-        <!-- Hibernate -->
+        
+        <!-- Hibernate Core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.15.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
-
-        <!-- MySQL -->
+        
+        <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.33</version>
+            <version>${mysql.version}</version>
         </dependency>
-
-        <!-- Logging -->
+        
+        <!-- Tests -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.36</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
-
+    
     <build>
+        <finalName>gestion-parc-informatique</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -67,4 +87,4 @@
             </plugin>
         </plugins>
     </build>
-</project>
+</project> 
