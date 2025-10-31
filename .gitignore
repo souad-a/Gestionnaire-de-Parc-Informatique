@@ -1,0 +1,46 @@
+ 
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+*.swp
+*.swo
+
+# Serveurs d'application
+.smarttomcat/
+.settings/
+Servers/
+
+# Build
+target/
+bin/
+build/
+*.class
+*.war
+*.ear
+*.jar
+
+# Database
+*.db
+*.sqlite
+*.mdb
+
+# System
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+tomcat/
+
+# Temp files
+*.tmp
+*.temp
+*.cache
+
+# Environment files
+.env
+*.properties.local
