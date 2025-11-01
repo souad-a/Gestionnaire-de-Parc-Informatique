@@ -10,7 +10,7 @@
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/gestion_parc_informatique?useSSL=false&amp;serverTimezone=UTC</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">ha2004&amp;&amp;az1993</property>
-        
+
         <!-- Paramètres de pool de connexions -->
         <property name="hibernate.c3p0.min_size">5</property>
         <property name="hibernate.c3p0.max_size">20</property>

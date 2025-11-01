@@ -19,16 +19,6 @@
             </div>
         </div>
     </div>
-    <!-- Ajoutez cette section dans index.jsp -->
-    <div class="mt-5">
-        <h4>Tests de développement</h4>
-        <a href="test-hibernate" class="btn btn-outline-info btn-sm">
-            🔧 Tester Hibernate
-        </a>
-        <a href="categories" class="btn btn-outline-warning btn-sm">
-            📁 Gestion Catégories
-        </a>
-    </div>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
