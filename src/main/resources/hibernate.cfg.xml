@@ -32,10 +32,7 @@
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.connection.useUnicode">true</property>
         
-        <!-- Scan des entités -->
 
-        <mapping class="com.parcinformatique.model.Employee"/>
-        <mapping class="com.parcinformatique.model.Category"/>
 
     </session-factory>
 </hibernate-configuration>

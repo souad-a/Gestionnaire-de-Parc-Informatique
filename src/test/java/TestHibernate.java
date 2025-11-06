@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/util/TestHibernate.java
 
 import com.parcinformatique.model.Category;
 import com.parcinformatique.util.HibernateUtil;
