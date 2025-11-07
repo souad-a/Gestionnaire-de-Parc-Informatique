@@ -23,6 +23,9 @@
 
         <!-- Entités -->
         <mapping class="com.parcinformatique.model.User"/>
+        <mapping class="com.parcinformatique.model.Equipment"/>
+        <mapping class="com.parcinformatique.model.Category"/>
+        <mapping class="com.parcinformatique.model.Employee"/>
 
     </session-factory>
 </hibernate-configuration>

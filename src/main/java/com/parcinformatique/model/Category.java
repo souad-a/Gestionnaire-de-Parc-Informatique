@@ -1,6 +1,7 @@
 package com.parcinformatique.model;
 
-import javax.persistence.*;
+// ⚠️ REMPLACER javax.persistence par jakarta.persistence
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,16 +18,16 @@ public class Category {
     @Column(length = 255)
     private String description;
 
-    // Constructeur par défaut (OBLIGATOIRE pour Hibernate)
+    // ✅ OK - Constructeur par défaut
     public Category() {}
 
-    // Constructeur avec paramètres
+    // ✅ OK - Constructeur avec paramètres
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    // GETTERS et SETTERS
+    // ✅ OK - Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

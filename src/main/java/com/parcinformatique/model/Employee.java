@@ -1,6 +1,7 @@
 package com.parcinformatique.model;
 
-import javax.persistence.*;
+// ⚠️ REMPLACER javax.persistence par jakarta.persistence
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "employees")
@@ -24,7 +25,7 @@ public class Employee {
     @Column(length = 20)
     private String phone;
 
-    // Constructeurs
+    // ✅ OK - Constructeurs
     public Employee() {}
 
     public Employee(String firstName, String lastName, String department, String email, String phone) {
@@ -35,7 +36,7 @@ public class Employee {
         this.phone = phone;
     }
 
-    // GETTERS et SETTERS
+    // ✅ OK - Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -45,7 +46,7 @@ public class Employee {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    // Méthode pratique pour avoir le nom complet
+    // ✅ OK - Méthode pratique pour avoir le nom complet
     public String getFullName() {
         return firstName + " " + lastName;
     }
