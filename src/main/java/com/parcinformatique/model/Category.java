@@ -1,8 +1,6 @@
 package com.parcinformatique.model;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "categories")
