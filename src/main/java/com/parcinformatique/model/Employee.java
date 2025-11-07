@@ -1,5 +1,6 @@
 package com.parcinformatique.model;
 
+// ⚠️ REMPLACER javax.persistence par jakarta.persistence
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -27,11 +28,10 @@ public class Employee {
     @Column(length = 20)
     private String phone;
 
-    // Dans votre Employee.java existant, ajoutez :
     @OneToMany(mappedBy = "employee")
     private List<Assignment> assignments = new ArrayList<>();
 
-    // Constructeurs
+    // ✅ OK - Constructeurs
     public Employee() {}
 
     public Employee(String firstName, String lastName, String department, String email, String phone) {
@@ -42,7 +42,7 @@ public class Employee {
         this.phone = phone;
     }
 
-    // GETTERS et SETTERS
+    // ✅ OK - Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -52,7 +52,7 @@ public class Employee {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    // Méthode pratique pour avoir le nom complet
+    // ✅ OK - Méthode pratique pour avoir le nom complet
     public String getFullName() {
         return firstName + " " + lastName;
     }
