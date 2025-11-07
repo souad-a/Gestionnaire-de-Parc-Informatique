@@ -2,6 +2,9 @@ package com.parcinformatique.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -23,6 +26,10 @@ public class Employee {
 
     @Column(length = 20)
     private String phone;
+
+    // Dans votre Employee.java existant, ajoutez :
+    @OneToMany(mappedBy = "employee")
+    private List<Assignment> assignments = new ArrayList<>();
 
     // Constructeurs
     public Employee() {}
@@ -58,6 +65,9 @@ public class Employee {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
+
+    public List<Assignment> getAssignments() { return assignments; }
+    public void setAssignments(List<Assignment> assignments) { this.assignments = assignments; }
 
     @Override
     public String toString() {
