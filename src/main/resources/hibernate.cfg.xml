@@ -5,38 +5,24 @@
 
 <hibernate-configuration>
     <session-factory>
-        <!-- Paramètres de connexion à la base de données -->
+        <!-- MySQL -->
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/gestion_parc_informatique?useSSL=false&amp;serverTimezone=UTC</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/gestion_parc_informatique</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password"></property>
-        
-        <!-- Paramètres de pool de connexions -->
-        <property name="hibernate.c3p0.min_size">5</property>
-        <property name="hibernate.c3p0.max_size">20</property>
-        <property name="hibernate.c3p0.timeout">300</property>
-        <property name="hibernate.c3p0.max_statements">50</property>
-        <property name="hibernate.c3p0.idle_test_period">3000</property>
-        
-        <!-- Dialecte SQL -->
+
+        <!-- Dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
-        
-        <!-- Affichage des requêtes SQL (à désactiver en production) -->
+
+        <!-- Affichage SQL -->
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        
-        <!-- Génération automatique des tables -->
+
+        <!-- Génération tables -->
         <property name="hibernate.hbm2ddl.auto">update</property>
-        
-        <!-- Encodage -->
-        <property name="hibernate.connection.characterEncoding">utf8</property>
-        <property name="hibernate.connection.useUnicode">true</property>
-        
-        <!-- Scan des entités -->
+
+        <!-- Entités -->
         <mapping class="com.parcinformatique.model.User"/>
-        <mapping class="com.parcinformatique.model.Employee"/>
-        <mapping class="com.parcinformatique.model.Category"/>
-        <mapping class="com.parcinformatique.model.Equipment"/>
-        <mapping class="com.parcinformatique.model.Assignment"/>
+
     </session-factory>
 </hibernate-configuration>
