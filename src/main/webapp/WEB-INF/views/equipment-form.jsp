@@ -1,6 +1,7 @@
 <%-- 📁 src/main/webapp/WEB-INF/views/equipment-form.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.parcinformatique.model.EquipmentStatus" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,16 +47,22 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Nom de l'équipement *</label>
+                                        <label for="name" class="form-label">
+                                            Nom de l'équipement *
+                                        </label>
                                         <input type="text" class="form-control" id="name" name="name"
-                                               value="${equipment.name}" required maxlength="100">
+                                               value="${equipment.name}" required maxlength="100"
+                                               placeholder="Ex: MacBook Pro, Dell XPS, Imprimante HP">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
-                                        <label for="serialNumber" class="form-label">Numéro de série *</label>
+                                        <label for="serialNumber" class="form-label">
+                                            Numéro de série *
+                                        </label>
                                         <input type="text" class="form-control" id="serialNumber" name="serialNumber"
-                                               value="${equipment.serialNumber}" required maxlength="100">
+                                               value="${equipment.serialNumber}" required maxlength="100"
+                                               placeholder="Ex: SN123456789">
                                     </div>
                                 </div>
                             </div>
@@ -65,14 +72,16 @@
                                     <div class="mb-3">
                                         <label for="brand" class="form-label">Marque</label>
                                         <input type="text" class="form-control" id="brand" name="brand"
-                                               value="${equipment.brand}" maxlength="50">
+                                               value="${equipment.brand}" maxlength="50"
+                                               placeholder="Ex: Apple, Dell, HP">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="model" class="form-label">Modèle</label>
                                         <input type="text" class="form-control" id="model" name="model"
-                                               value="${equipment.model}" maxlength="50">
+                                               value="${equipment.model}" maxlength="50"
+                                               placeholder="Ex: MacBook Pro 2023">
                                     </div>
                                 </div>
                             </div>
@@ -85,11 +94,14 @@
                                             <option value="">-- Sélectionnez une catégorie --</option>
                                             <c:forEach var="category" items="${categories}">
                                                 <option value="${category.id}"
-                                                    ${equipment.category.id == category.id ? 'selected' : ''}>
+                                                    ${not empty equipment && equipment.category.id == category.id ? 'selected' : ''}>
                                                     ${category.name}
                                                 </option>
                                             </c:forEach>
                                         </select>
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle"></i> Optionnel - Permet de classer l'équipement
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -97,10 +109,29 @@
                                         <label for="status" class="form-label">Statut *</label>
                                         <select class="form-select" id="status" name="status" required>
                                             <option value="">-- Sélectionnez un statut --</option>
-                                            <c:forEach var="status" items="${statusValues}">
-                                                <option value="${status}"
-                                                    ${equipment.status == status ? 'selected' : ''}>
-                                                    ${status}
+                                            <c:forEach var="statusValue" items="${statusValues}">
+                                                <option value="${statusValue}"
+                                                    ${equipment.status == statusValue ? 'selected' : ''}>
+                                                    <c:choose>
+                                                        <c:when test="${statusValue == EquipmentStatus.AVAILABLE}">
+                                                            ✓ Disponible
+                                                        </c:when>
+                                                        <c:when test="${statusValue == EquipmentStatus.ASSIGNED}">
+                                                            👤 Assigné
+                                                        </c:when>
+                                                        <c:when test="${statusValue == EquipmentStatus.MAINTENANCE}">
+                                                            🔧 En maintenance
+                                                        </c:when>
+                                                        <c:when test="${statusValue == EquipmentStatus.OUT_OF_ORDER}">
+                                                            ✗ Hors service
+                                                        </c:when>
+                                                        <c:when test="${statusValue == EquipmentStatus.RESERVED}">
+                                                            🔖 Réservé
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            ${statusValue}
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </option>
                                             </c:forEach>
                                         </select>
@@ -114,6 +145,9 @@
                                         <label for="purchaseDate" class="form-label">Date d'achat</label>
                                         <input type="date" class="form-control" id="purchaseDate" name="purchaseDate"
                                                value="${equipment.purchaseDate}">
+                                        <div class="form-text">
+                                            <i class="fas fa-calendar"></i> Optionnel - Pour le suivi de garantie
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -121,16 +155,20 @@
                             <div class="mb-3">
                                 <label for="description" class="form-label">Description</label>
                                 <textarea class="form-control" id="description" name="description"
-                                          rows="3" maxlength="500">${equipment.description}</textarea>
+                                          rows="3" maxlength="500"
+                                          placeholder="Ajoutez des détails supplémentaires sur l'équipement (configuration, particularités, etc.)">${equipment.description}</textarea>
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle"></i> Optionnel - Maximum 500 caractères
+                                </div>
                             </div>
 
                             <div class="d-flex justify-content-between">
                                 <a href="equipments" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left"></i> Retour à la liste
+                                    <i class="fas fa-arrow-left"></i> Annuler
                                 </a>
                                 <button type="submit" class="btn btn-success">
-                                    <i class="fas ${empty equipment ? 'fa-save' : 'fa-edit'}"></i>
-                                    ${empty equipment ? 'Créer l\'équipement' : 'Modifier l\'équipement'}
+                                    <i class="fas ${empty equipment ? 'fa-save' : 'fa-check'}"></i>
+                                    ${empty equipment ? 'Créer l\'équipement' : 'Enregistrer les modifications'}
                                 </button>
                             </div>
                         </form>

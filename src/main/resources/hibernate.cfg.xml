@@ -9,7 +9,7 @@
         <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
         <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/gestion_parc_informatique</property>
         <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.password">ha2004&amp;&amp;az1993</property>
 
         <!-- Dialect -->
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
@@ -26,6 +26,8 @@
         <mapping class="com.parcinformatique.model.Equipment"/>
         <mapping class="com.parcinformatique.model.Category"/>
         <mapping class="com.parcinformatique.model.Employee"/>
+        <mapping class="com.parcinformatique.model.Assignment"/>
+
 
     </session-factory>
 </hibernate-configuration>

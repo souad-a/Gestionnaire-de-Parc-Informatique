@@ -283,7 +283,7 @@
                                 </a>
                             </div>
                             <div class="col-md-6">
-                                <a href="${pageContext.request.contextPath}/affectations"
+                                <a href="${pageContext.request.contextPath}/assignments"
                                    class="btn btn-outline-warning w-100 text-start p-3">
                                     <i class="fas fa-handshake me-2 fa-lg"></i>
                                     <div>

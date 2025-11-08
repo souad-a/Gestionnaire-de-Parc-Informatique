@@ -20,6 +20,7 @@ public interface AssignmentDAO {
     List<Assignment> findActiveAssignments();
     List<Assignment> findByStatus(String status);
     List<Assignment> findAssignmentsBetweenDates(LocalDate startDate, LocalDate endDate);
+    List<Assignment> findByEquipmentAndEmployee(Long equipmentId, Long employeeId);
 
     // Vérifications métier
     boolean isEquipmentAvailable(Long equipmentId, LocalDate date);

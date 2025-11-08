@@ -2,8 +2,21 @@
 package com.parcinformatique.model;
 
 public enum EquipmentStatus {
-    AVAILABLE,      // En stock
-    IN_USE,         // En utilisation
+    AVAILABLE,      // Disponible
+    ASSIGNED,       // Assigné à un employé
     MAINTENANCE,    // En maintenance
-    OUT_OF_SERVICE  // Hors service
+    OUT_OF_ORDER,   // Hors service
+    RESERVED;       // Réservé
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case AVAILABLE: return "Disponible";
+            case ASSIGNED: return "Assigné";
+            case MAINTENANCE: return "En maintenance";
+            case OUT_OF_ORDER: return "Hors service";
+            case RESERVED: return "Réservé";
+            default: return name();
+        }
+    }
 }

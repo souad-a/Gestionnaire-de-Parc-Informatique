@@ -1,6 +1,7 @@
 <%-- 📁 src/main/webapp/WEB-INF/views/equipment-list.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.parcinformatique.model.EquipmentStatus" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -98,20 +99,37 @@
                                                     </c:otherwise>
                                                 </c:choose>
                                             </td>
+
                                             <td>
                                                 <c:choose>
-                                                    <c:when test="${equipment.status == 'AVAILABLE'}">
-                                                        <span class="badge bg-success">Disponible</span>
+                                                    <c:when test="${equipment.status == EquipmentStatus.AVAILABLE}">
+                                                        <span class="badge bg-success">
+                                                            <i class="fas fa-check-circle"></i> Disponible
+                                                        </span>
                                                     </c:when>
-                                                    <c:when test="${equipment.status == 'IN_USE'}">
-                                                        <span class="badge bg-primary">En utilisation</span>
+                                                    <c:when test="${equipment.status == EquipmentStatus.ASSIGNED}">
+                                                        <span class="badge bg-primary">
+                                                            <i class="fas fa-user-check"></i> Assigné
+                                                        </span>
                                                     </c:when>
-                                                    <c:when test="${equipment.status == 'MAINTENANCE'}">
-                                                        <span class="badge bg-warning">Maintenance</span>
+                                                    <c:when test="${equipment.status == EquipmentStatus.MAINTENANCE}">
+                                                        <span class="badge bg-warning text-dark">
+                                                            <i class="fas fa-tools"></i> Maintenance
+                                                        </span>
                                                     </c:when>
-                                                    <c:when test="${equipment.status == 'OUT_OF_SERVICE'}">
-                                                        <span class="badge bg-danger">Hors service</span>
+                                                    <c:when test="${equipment.status == EquipmentStatus.OUT_OF_ORDER}">
+                                                        <span class="badge bg-danger">
+                                                            <i class="fas fa-times-circle"></i> Hors service
+                                                        </span>
                                                     </c:when>
+                                                    <c:when test="${equipment.status == EquipmentStatus.RESERVED}">
+                                                        <span class="badge bg-info text-dark">
+                                                            <i class="fas fa-bookmark"></i> Réservé
+                                                        </span>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <span class="badge bg-secondary">${equipment.status}</span>
+                                                    </c:otherwise>
                                                 </c:choose>
                                             </td>
                                             <td>

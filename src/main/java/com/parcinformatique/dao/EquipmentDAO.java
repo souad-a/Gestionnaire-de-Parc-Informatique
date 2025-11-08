@@ -59,13 +59,17 @@ public class EquipmentDAO {
         }
     }
 
+
     public List<Equipment> findAvailableEquipment() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            return session.createQuery(
-                    "FROM Equipment WHERE status = 'AVAILABLE' ORDER BY name",
+            // ✅ CORRECTION : Ajouter LEFT JOIN FETCH pour charger les catégories
+            Query<Equipment> query = session.createQuery(
+                    "FROM Equipment e LEFT JOIN FETCH e.category WHERE e.status = :status ORDER BY e.name",
                     Equipment.class
-            ).list();
+            );
+            query.setParameter("status", EquipmentStatus.AVAILABLE);
+            return query.list();
         } finally {
             session.close();
         }

@@ -172,4 +172,17 @@ public class AssignmentDAOImpl implements AssignmentDAO {
             return count != null ? count.intValue() : 0;
         }
     }
+
+    public List<Assignment> findByEquipmentAndEmployee(Long equipmentId, Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.equipment.id = :equipmentId AND a.employee.id = :employeeId " +
+                            "ORDER BY a.assignmentDate DESC",
+                    Assignment.class
+            );
+            query.setParameter("equipmentId", equipmentId);
+            query.setParameter("employeeId", employeeId);
+            return query.getResultList();
+        }
+    }
 }
