@@ -156,7 +156,6 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>Équipement</th>
                                 <th>Employé</th>
                                 <th>Date Affectation</th>
@@ -168,7 +167,6 @@
                         <tbody>
                             <c:forEach var="assignment" items="${assignments}">
                                 <tr>
-                                    <td>#${assignment.id}</td>
                                     <td>
                                         <strong>${assignment.equipment.name}</strong>
                                         <br><small class="text-muted">

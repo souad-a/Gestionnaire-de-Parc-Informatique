@@ -36,9 +36,7 @@
                         <a href="<%= request.getContextPath() %>/auth" class="btn btn-light btn-lg px-5 shadow">
                             🔐 Se connecter
                         </a>
-                        <a href="<%= request.getContextPath() %>/dashboard" class="btn btn-outline-light btn-lg px-5">
-                            📊 Tableau de bord
-                        </a>
+
                     </div>
 
                     <!-- Fonctionnalités -->
@@ -61,22 +59,7 @@
                             <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
                                 <div class="fs-1 mb-3">📈</div>
                                 <h5>Rapports</h5>
-                                <p class="small mb-0">Générez des statistiques détaillées</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Comptes de test -->
-                    <div class="mt-5 p-4 bg-white bg-opacity-10 rounded">
-                        <h6 class="mb-3">🔑 Comptes de démonstration</h6>
-                        <div class="row text-start">
-                            <div class="col-md-6">
-                                <strong>Administrateur :</strong><br>
-                                <code class="text-warning">admin / admin123</code>
-                            </div>
-                            <div class="col-md-6">
-                                <strong>Technicien :</strong><br>
-                                <code class="text-warning">technicien / tech123</code>
+                                <p class="small mb-0">Générez des statistiques détaillées</p></br>
                             </div>
                         </div>
                     </div>

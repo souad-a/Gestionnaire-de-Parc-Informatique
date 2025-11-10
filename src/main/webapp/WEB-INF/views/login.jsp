@@ -49,13 +49,6 @@
                         <button type="submit" class="btn btn-primary w-100">Se connecter</button>
                     </form>
 
-                    <div class="mt-4 text-center">
-                        <small class="text-muted">
-                            Comptes de test :<br>
-                            <strong>admin / admin123</strong> (Administrateur)<br>
-                            <strong>technicien / tech123</strong> (Technicien)
-                        </small>
-                    </div>
                 </div>
             </div>
         </div>

@@ -43,7 +43,6 @@
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Nom</th>
                                         <th>Description</th>
                                         <th>Actions</th>
@@ -52,7 +51,6 @@
                                 <tbody>
                                     <c:forEach var="category" items="${categories}">
                                         <tr>
-                                            <td>${category.id}</td>
                                             <td><strong>${category.name}</strong></td>
                                             <td>
                                                 <c:choose>

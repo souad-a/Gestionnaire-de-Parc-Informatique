@@ -72,7 +72,6 @@
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Nom</th>
                                         <th>Marque/Modèle</th>
                                         <th>N° Série</th>
@@ -85,7 +84,6 @@
                                 <tbody>
                                     <c:forEach var="equipment" items="${equipmentList}">
                                         <tr>
-                                            <td>${equipment.id}</td>
                                             <td><strong>${equipment.name}</strong></td>
                                             <td>${equipment.brand} ${equipment.model}</td>
                                             <td><code>${equipment.serialNumber}</code></td>

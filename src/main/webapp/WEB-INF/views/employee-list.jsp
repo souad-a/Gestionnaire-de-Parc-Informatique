@@ -74,7 +74,6 @@
                             <table class="table table-striped table-hover">
                                 <thead class="table-dark">
                                     <tr>
-                                        <th>ID</th>
                                         <th>Nom Complet</th>
                                         <th>Département</th>
                                         <th>Email</th>
@@ -85,7 +84,6 @@
                                 <tbody>
                                     <c:forEach var="employee" items="${employees}">
                                         <tr>
-                                            <td>${employee.id}</td>
                                             <td>
                                                 <strong>${employee.fullName}</strong>
                                             </td>
