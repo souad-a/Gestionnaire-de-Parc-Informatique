@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/model/Equipment.java
 package com.parcinformatique.model;
 
 import jakarta.persistence.*;
@@ -38,7 +37,6 @@ public class Equipment {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    // Constructeurs
     public Equipment() {}
 
     public Equipment(String name, String brand, String model, String serialNumber) {
@@ -58,7 +56,6 @@ public class Equipment {
         this.purchaseDate = purchaseDate;
     }
 
-    // Getters/Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -86,7 +83,6 @@ public class Equipment {
     public Category getCategory() { return category; }
     public void setCategory(Category category) { this.category = category; }
 
-    // Méthode utilitaire
     public String getFullName() {
         return brand + " " + model + " - " + name;
     }

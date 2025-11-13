@@ -28,7 +28,6 @@ public class EquipmentStats {
                 (availableCount * 100.0) / totalEquipments : 0;
     }
 
-    // Getters
     public long getTotalEquipments() { return totalEquipments; }
     public long getAvailableCount() { return availableCount; }
     public long getAssignedCount() { return assignedCount; }

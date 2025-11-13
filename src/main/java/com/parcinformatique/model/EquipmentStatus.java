@@ -2,11 +2,11 @@
 package com.parcinformatique.model;
 
 public enum EquipmentStatus {
-    AVAILABLE,      // Disponible
-    ASSIGNED,       // Assigné à un employé
-    MAINTENANCE,    // En maintenance
-    OUT_OF_ORDER,   // Hors service
-    RESERVED, OUT_OF_SERVICE;       // Réservé
+    AVAILABLE,
+    ASSIGNED,
+    MAINTENANCE,
+    OUT_OF_ORDER,
+    RESERVED, OUT_OF_SERVICE;
 
     @Override
     public String toString() {

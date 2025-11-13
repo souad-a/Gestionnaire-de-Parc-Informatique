@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/filter/AuthenticationFilter.java
 package com.parcinformatique.filter;
 
 import jakarta.servlet.*;

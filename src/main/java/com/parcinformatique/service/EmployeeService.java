@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 public class EmployeeService {
     private EmployeeDAO employeeDAO;
 
-    // Regex pour validation email
     private static final Pattern EMAIL_PATTERN =
             Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
     private static final Pattern PHONE_PATTERN =
@@ -19,7 +18,6 @@ public class EmployeeService {
         this.employeeDAO = new EmployeeDAO();
     }
 
-    // 📊 MÉTHODES MÉTIER
 
     public List<Employee> getAllEmployees() {
         return employeeDAO.findAll();
@@ -37,10 +35,8 @@ public class EmployeeService {
     }
 
     public Employee createEmployee(String firstName, String lastName, String department, String email, String phone) {
-        // Validation métier
         validateEmployeeData(firstName, lastName, department, email, phone);
 
-        // Vérification unicité email
         if (!employeeDAO.isEmailUnique(email, null)) {
             throw new IllegalArgumentException("Un employé avec l'email '" + email + "' existe déjà");
         }
@@ -51,16 +47,13 @@ public class EmployeeService {
     }
 
     public Employee updateEmployee(Long id, String firstName, String lastName, String department, String email, String phone) {
-        // Validation
         validateEmployeeData(firstName, lastName, department, email, phone);
         Employee existingEmployee = getEmployeeById(id);
 
-        // Vérification unicité email (exclure l'actuel)
         if (!employeeDAO.isEmailUnique(email, id)) {
             throw new IllegalArgumentException("Un autre employé avec l'email '" + email + "' existe déjà");
         }
 
-        // Mise à jour
         existingEmployee.setFirstName(firstName);
         existingEmployee.setLastName(lastName);
         existingEmployee.setDepartment(department);
@@ -74,11 +67,7 @@ public class EmployeeService {
     public void deleteEmployee(Long id) {
         Employee employee = getEmployeeById(id);
 
-        // 🔍  RÈGLES MÉTIER à AJOUTER PLUS TARD
-        // Ex: Vérifier qu'aucun équipement n'est affecté à cet employé
-        // if (!employee.getAssignments().isEmpty()) {
-        //     throw new IllegalStateException("Impossible de supprimer : employé a des équipements affectés");
-        // }
+
 
         employeeDAO.delete(id);
     }
@@ -86,7 +75,6 @@ public class EmployeeService {
         return employeeDAO.findAllDepartments();
     }
 
-    // ✅ VALIDATION MÉTIER
     private void validateEmployeeData(String firstName, String lastName, String department, String email, String phone) {
         if (firstName == null || firstName.trim().isEmpty()) {
             throw new IllegalArgumentException("Le prénom est obligatoire");
@@ -101,24 +89,20 @@ public class EmployeeService {
             throw new IllegalArgumentException("L'email est obligatoire");
         }
 
-        // Validation format email
         if (!EMAIL_PATTERN.matcher(email).matches()) {
             throw new IllegalArgumentException("Format d'email invalide");
         }
 
-        // Validation longueurs
         if (firstName.length() > 50) throw new IllegalArgumentException("Le prénom ne peut pas dépasser 50 caractères");
         if (lastName.length() > 50) throw new IllegalArgumentException("Le nom ne peut pas dépasser 50 caractères");
         if (department.length() > 100) throw new IllegalArgumentException("Le département ne peut pas dépasser 100 caractères");
         if (email.length() > 100) throw new IllegalArgumentException("L'email ne peut pas dépasser 100 caractères");
 
-        // Validation optionnelle du téléphone
         if (phone != null && !phone.trim().isEmpty() && !PHONE_PATTERN.matcher(phone).matches()) {
             throw new IllegalArgumentException("Format de téléphone invalide");
         }
     }
 
-    // 🔍 MÉTHODES MÉTIER SPÉCIFIQUES
     public boolean isEmployeeEmailUnique(String email, Long excludeId) {
         return employeeDAO.isEmailUnique(email, excludeId);
     }

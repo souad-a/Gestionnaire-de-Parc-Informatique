@@ -27,7 +27,7 @@
     </properties>
 
     <dependencies>
-        <!-- ✅ Servlet API -->
+        <!-- Servlet API -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -35,7 +35,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ✅ JSP API -->
+        <!-- JSP API -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -43,7 +43,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ✅ JSTL (Jakarta) -->
+        <!-- JSTL (Jakarta) -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -55,28 +55,28 @@
             <version>3.0.1</version>
         </dependency>
 
-        <!-- ✅ Hibernate Core -->
+        <!--  Hibernate Core -->
         <dependency>
             <groupId>org.hibernate.orm</groupId>
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
 
-        <!-- ✅ MySQL Connector -->
+        <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>${mysql.version}</version>
         </dependency>
 
-        <!-- ✅ JAXB (pour compatibilité Java 11+) -->
+        <!-- java11-->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
             <version>4.0.2</version>
         </dependency>
 
-        <!-- ✅ JUnit (tests unitaires) -->
+        <!-- tests unitaires -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -88,7 +88,7 @@
     <build>
         <finalName>gestion-parc-informatique</finalName>
         <plugins>
-            <!-- ✅ WAR Plugin -->
+            <!-- WAR Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -98,7 +98,7 @@
                 </configuration>
             </plugin>
 
-            <!-- ✅ Compiler Plugin -->
+            <!-- Compiler Plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
