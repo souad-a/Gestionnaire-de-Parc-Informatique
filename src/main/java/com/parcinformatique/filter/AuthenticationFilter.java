@@ -19,7 +19,7 @@ public class AuthenticationFilter implements Filter {
 
         String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
 
-        // Pages publiques (pas besoin d'être connecté)
+        // Pages publiques
         if (path.startsWith("/auth") ||
                 path.equals("/") ||
                 path.startsWith("/resources/") ||

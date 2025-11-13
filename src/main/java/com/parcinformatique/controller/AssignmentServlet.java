@@ -118,7 +118,6 @@ public class AssignmentServlet extends HttpServlet {
     private void showActiveAssignments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Récupérer le message de succès depuis la session
         String successMessage = (String) request.getSession().getAttribute("successMessage");
         if (successMessage != null) {
             request.setAttribute("successMessage", successMessage);
@@ -140,7 +139,7 @@ public class AssignmentServlet extends HttpServlet {
 
         List<Assignment> assignments;
 
-        // ✅ NOUVELLE LOGIQUE : Gérer toutes les combinaisons
+        // Gérer toutes les combinaisons
         boolean hasEquipmentFilter = equipmentId != null && !equipmentId.isEmpty();
         boolean hasEmployeeFilter = employeeId != null && !employeeId.isEmpty();
 

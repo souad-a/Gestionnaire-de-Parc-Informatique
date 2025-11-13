@@ -43,7 +43,6 @@ public class UserDAO {
         }
     }
 
-    // Sauvegarder
     public void save(User user) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;

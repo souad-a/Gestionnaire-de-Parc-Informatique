@@ -1,8 +1,6 @@
 package com.parcinformatique.dao;
 
 import com.parcinformatique.model.Assignment;
-import com.parcinformatique.model.Equipment;
-import com.parcinformatique.model.Employee;
 import com.parcinformatique.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -105,32 +103,7 @@ public class AssignmentDAOImpl implements AssignmentDAO {
         }
     }
 
-    @Override
-    public List<Assignment> findByStatus(String status) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Assignment> query = session.createQuery(
-                    "FROM Assignment a WHERE a.status = :status ORDER BY a.assignmentDate DESC",
-                    Assignment.class
-            );
-            query.setParameter("status", status);
-            return query.getResultList();
-        }
-    }
-
-    @Override
-    public List<Assignment> findAssignmentsBetweenDates(LocalDate startDate, LocalDate endDate) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Assignment> query = session.createQuery(
-                    "FROM Assignment a WHERE a.assignmentDate BETWEEN :startDate AND :endDate ORDER BY a.assignmentDate",
-                    Assignment.class
-            );
-            query.setParameter("startDate", startDate);
-            query.setParameter("endDate", endDate);
-            return query.getResultList();
-        }
-    }
-
-    // ✅ LOGIQUE MÉTIER IMPORTANTE - Vérification disponibilité équipement
+    //  LOGIQUE MÉTIER IMPORTANTE - Vérification disponibilité équipement
     @Override
     public boolean isEquipmentAvailable(Long equipmentId, LocalDate date) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -144,32 +117,6 @@ public class AssignmentDAOImpl implements AssignmentDAO {
             query.setParameter("date", date);
             Long count = query.uniqueResult();
             return count == 0; // Disponible si aucun assignment actif
-        }
-    }
-
-    @Override
-    public boolean hasActiveAssignment(Long employeeId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Long> query = session.createQuery(
-                    "SELECT COUNT(a) FROM Assignment a WHERE a.employee.id = :employeeId AND a.status = 'ACTIVE'",
-                    Long.class
-            );
-            query.setParameter("employeeId", employeeId);
-            Long count = query.uniqueResult();
-            return count > 0;
-        }
-    }
-
-    @Override
-    public int countActiveAssignmentsByEmployee(Long employeeId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            Query<Long> query = session.createQuery(
-                    "SELECT COUNT(a) FROM Assignment a WHERE a.employee.id = :employeeId AND a.status = 'ACTIVE'",
-                    Long.class
-            );
-            query.setParameter("employeeId", employeeId);
-            Long count = query.uniqueResult();
-            return count != null ? count.intValue() : 0;
         }
     }
 

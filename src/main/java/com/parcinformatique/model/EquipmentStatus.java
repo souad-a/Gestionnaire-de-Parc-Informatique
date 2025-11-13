@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/model/EquipmentStatus.java
 package com.parcinformatique.model;
 
 public enum EquipmentStatus {

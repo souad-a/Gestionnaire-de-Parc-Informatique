@@ -83,21 +83,4 @@ public class CategoryService {
         }
     }
 
-    public boolean isCategoryNameUnique(String name, Long excludeId) {
-        return categoryDAO.isNameUnique(name, excludeId);
-    }
-
-    public List<Category> searchCategories(String keyword) {
-
-        List<Category> allCategories = getAllCategories();
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return allCategories;
-        }
-
-        String lowerKeyword = keyword.toLowerCase();
-        return allCategories.stream()
-                .filter(c -> c.getName().toLowerCase().contains(lowerKeyword) ||
-                        (c.getDescription() != null && c.getDescription().toLowerCase().contains(lowerKeyword)))
-                .toList();
-    }
 }

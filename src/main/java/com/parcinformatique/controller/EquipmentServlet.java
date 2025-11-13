@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/controller/EquipmentServlet.java
 package com.parcinformatique.controller;
 
 import com.parcinformatique.service.EquipmentService;

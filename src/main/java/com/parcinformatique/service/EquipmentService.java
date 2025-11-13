@@ -3,10 +3,8 @@ package com.parcinformatique.service;
 import com.parcinformatique.dao.EquipmentDAO;
 import com.parcinformatique.model.Equipment;
 import com.parcinformatique.model.EquipmentStatus;
-import com.parcinformatique.model.Category;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public class EquipmentService {
 
@@ -22,14 +20,6 @@ public class EquipmentService {
 
     public Equipment getEquipmentById(Long id) {
         return equipmentDAO.findById(id);
-    }
-
-    public List<Equipment> getEquipmentByStatus(EquipmentStatus status) {
-        return equipmentDAO.findByStatus(status);
-    }
-
-    public List<Equipment> getEquipmentByCategory(Long categoryId) {
-        return equipmentDAO.findByCategory(categoryId);
     }
 
     public List<Equipment> getAvailableEquipment() {
@@ -77,48 +67,6 @@ public class EquipmentService {
         }
     }
 
-    public long getAvailableEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.AVAILABLE);
+
     }
 
-    public long getAssignedEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.ASSIGNED);
-    }
-
-    public long getMaintenanceEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.MAINTENANCE);
-    }
-
-    public boolean isEquipmentAvailable(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        return equipment != null && equipment.getStatus() == EquipmentStatus.AVAILABLE;
-    }
-
-    public Optional<Equipment> findBySerialNumber(String serialNumber) {
-        return equipmentDAO.findBySerialNumber(serialNumber);
-    }
-
-    public void markAsAssigned(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.ASSIGNED);
-            equipmentDAO.save(equipment);
-        }
-    }
-
-    public void markAsAvailable(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.AVAILABLE);
-            equipmentDAO.save(equipment);
-        }
-    }
-
-    public void markAsMaintenance(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.MAINTENANCE);
-            equipmentDAO.save(equipment);
-        }
-    }
-}

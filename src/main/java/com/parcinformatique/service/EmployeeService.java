@@ -103,10 +103,6 @@ public class EmployeeService {
         }
     }
 
-    public boolean isEmployeeEmailUnique(String email, Long excludeId) {
-        return employeeDAO.isEmailUnique(email, excludeId);
-    }
-
     public List<Employee> getEmployeesByDepartment(String department) {
         if (department == null || department.trim().isEmpty()) {
             return getAllEmployees();

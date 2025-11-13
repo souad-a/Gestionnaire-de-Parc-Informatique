@@ -2,6 +2,7 @@ package com.parcinformatique.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "equipments")
@@ -36,6 +37,11 @@ public class Equipment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
+
+    //Relation OneToMany avec Assignment
+    @OneToMany(mappedBy = "equipment")
+    private List<Assignment> assignments;
+
 
     public Equipment() {}
 

@@ -106,17 +106,6 @@ public class AssignmentService {
         return assignmentDAO.isEquipmentAvailable(equipmentId, date);
     }
 
-    public boolean hasActiveAssignment(Long employeeId) {
-        return assignmentDAO.hasActiveAssignment(employeeId);
-    }
-
-    public int countActiveAssignmentsByEmployee(Long employeeId) {
-        return assignmentDAO.countActiveAssignmentsByEmployee(employeeId);
-    }
-
-    public List<Assignment> getAssignmentHistory(LocalDate startDate, LocalDate endDate) {
-        return assignmentDAO.findAssignmentsBetweenDates(startDate, endDate);
-    }
     public List<Assignment> getAssignmentsByEquipmentAndEmployee(Long equipmentId, Long employeeId) {
         return assignmentDAO.findByEquipmentAndEmployee(equipmentId, employeeId);
     }
