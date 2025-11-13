@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/dao/UserDAO.java
 package com.parcinformatique.dao;
 
 import com.parcinformatique.model.User;
@@ -10,7 +9,6 @@ import java.util.List;
 
 public class UserDAO {
 
-    // Trouver par username
     public User findByUsername(String username) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {

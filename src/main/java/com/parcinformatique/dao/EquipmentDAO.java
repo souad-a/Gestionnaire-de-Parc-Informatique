@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/dao/EquipmentDAO.java
 package com.parcinformatique.dao;
 
 import com.parcinformatique.model.Equipment;

@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/controller/AuthServlet.java
 package com.parcinformatique.controller;
 
 import com.parcinformatique.dao.UserDAO;
@@ -31,7 +30,7 @@ public class AuthServlet extends HttpServlet {
             request.getSession().invalidate();
             response.sendRedirect(request.getContextPath() + "/auth?action=login");
         } else {
-            // Affichage page de login
+            // page de login
             request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
         }
     }

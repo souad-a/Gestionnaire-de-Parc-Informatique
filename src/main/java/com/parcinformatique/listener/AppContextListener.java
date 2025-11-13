@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/listener/AppContextListener.java
 package com.parcinformatique.listener;
 
 import com.parcinformatique.util.DataInitializer;
@@ -12,7 +11,7 @@ public class AppContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("🚀 Application Gestionnaire de Parc Informatique démarrée");
+        System.out.println("Application Gestionnaire de Parc Informatique démarrée");
 
         // Initialiser les données de test
         DataInitializer.initializeTestData();
@@ -20,6 +19,6 @@ public class AppContextListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        System.out.println("🛑 Application arrêtée");
+        System.out.println("Application arrêtée");
     }
 }

@@ -12,12 +12,10 @@ public class HibernateUtil {
 
     static {
         try {
-            // 🔹 Crée un registre de services à partir du fichier hibernate.cfg.xml
             StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
                     .configure("hibernate.cfg.xml")
                     .build();
 
-            // 🔹 Charge les métadonnées et construit la SessionFactory
             Metadata metadata = new MetadataSources(registry).getMetadataBuilder().build();
             sessionFactory = metadata.getSessionFactoryBuilder().build();
 
