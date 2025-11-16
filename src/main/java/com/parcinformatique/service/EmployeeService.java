@@ -1,13 +1,17 @@
 package com.parcinformatique.service;
 
 import com.parcinformatique.dao.EmployeeDAO;
+import com.parcinformatique.dao.UserDAO;
 import com.parcinformatique.model.Employee;
+import com.parcinformatique.model.User;
+import com.parcinformatique.model.Role;
 
 import java.util.List;
 import java.util.regex.Pattern;
 
 public class EmployeeService {
     private EmployeeDAO employeeDAO;
+    private UserDAO userDAO; // DÉCLARATION
 
     // Regex pour validation email
     private static final Pattern EMAIL_PATTERN =
@@ -17,10 +21,10 @@ public class EmployeeService {
 
     public EmployeeService() {
         this.employeeDAO = new EmployeeDAO();
+        this.userDAO = new UserDAO(); // INITIALISATION
     }
 
-    // 📊 MÉTHODES MÉTIER
-
+    // 📊 MÉTHODES MÉTIER EXISTANTES
     public List<Employee> getAllEmployees() {
         return employeeDAO.findAll();
     }
@@ -73,15 +77,9 @@ public class EmployeeService {
 
     public void deleteEmployee(Long id) {
         Employee employee = getEmployeeById(id);
-
-        // 🔍  RÈGLES MÉTIER à AJOUTER PLUS TARD
-        // Ex: Vérifier qu'aucun équipement n'est affecté à cet employé
-        // if (!employee.getAssignments().isEmpty()) {
-        //     throw new IllegalStateException("Impossible de supprimer : employé a des équipements affectés");
-        // }
-
         employeeDAO.delete(id);
     }
+
     public List<String> getAllDepartments() {
         return employeeDAO.findAllDepartments();
     }
@@ -143,5 +141,49 @@ public class EmployeeService {
                         e.getDepartment().toLowerCase().contains(lowerKeyword) ||
                         e.getEmail().toLowerCase().contains(lowerKeyword))
                 .toList();
+    }
+
+    // ✅ MÉTHODES ADMIN - Gestion des utilisateurs
+    // ✅ MÉTHODES ADMIN - Gestion des utilisateurs
+    // Dans EmployeeService.java - Version sans relation directe
+    // ✅ MÉTHODES ADMIN - Gestion des utilisateurs - CORRECTION
+    // Dans EmployeeService.java - CORRECTION
+    public User createUserAccount(String username, String password, Role role, Employee employee) {
+        // Vérifier l'unicité du username
+        if (userDAO.findByUsername(username) != null) {
+            throw new IllegalArgumentException("Un utilisateur avec ce nom d'utilisateur existe déjà");
+        }
+
+        // Créer l'utilisateur
+        User user = new User(username, password, role);
+        userDAO.save(user);
+
+        // Associer l'employé si fourni
+        if (employee != null) {
+            employee.setUser(user);
+            employeeDAO.save(employee);
+        }
+
+        return user;
+    }
+
+    public List<User> getAllUsers() {
+        return userDAO.findAll();
+    }
+
+    public void deactivateUser(Long userId) {
+        User user = userDAO.findById(userId);
+        if (user != null) {
+            user.setActive(false);
+            userDAO.save(user);
+        }
+    }
+
+    public void activateUser(Long userId) {
+        User user = userDAO.findById(userId);
+        if (user != null) {
+            user.setActive(true);
+            userDAO.save(user);
+        }
     }
 }

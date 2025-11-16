@@ -1,6 +1,7 @@
-// 📁 src/main/java/com/parcinformatique/filter/AuthenticationFilter.java
 package com.parcinformatique.filter;
 
+import com.parcinformatique.model.Role;
+import com.parcinformatique.model.User;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,7 +42,43 @@ public class AuthenticationFilter implements Filter {
             return;
         }
 
-        // Utilisateur connecté → continuer
+        // Vérifier les autorisations selon le rôle
+        User user = (User) session.getAttribute("user");
+        if (!hasPermission(user.getRole(), path)) {
+            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé - Vous n'avez pas les permissions nécessaires");
+            return;
+        }
+
+        // Utilisateur connecté et autorisé → continuer
         chain.doFilter(request, response);
+    }
+
+    private boolean hasPermission(Role role, String path) {
+        // Admin a accès à tout
+        if (role == Role.ADMIN) {
+            return true;
+        }
+
+        // Routes communes à tous les rôles connectés
+        if (path.equals("/dashboard") || path.startsWith("/profile")) {
+            return true;
+        }
+
+        // Permissions par rôle
+        switch (role) {
+            case TECHNICIAN:
+                return path.startsWith("/equipments") ||
+                        path.startsWith("/technician") ||
+                        path.startsWith("/categories");
+
+            case EMPLOYEE:
+                return path.startsWith("/assignments") ||
+                        path.startsWith("/employee") ||
+                        (path.startsWith("/equipments") &&
+                                (path.contains("?action=my-equipment") || path.equals("/equipments")));
+
+            default:
+                return false;
+        }
     }
 }

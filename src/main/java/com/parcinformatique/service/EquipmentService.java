@@ -129,4 +129,28 @@ public class EquipmentService {
             equipmentDAO.save(equipment);
         }
     }
+    // ✅ MÉTHODES TECHNICIEN
+    public void updateEquipmentStatus(Long equipmentId, EquipmentStatus newStatus) {
+        Equipment equipment = equipmentDAO.findById(equipmentId);
+        if (equipment != null) {
+            equipment.setStatus(newStatus);
+            equipmentDAO.save(equipment);
+        }
+    }
+
+    public List<Equipment> getEquipmentInMaintenance() {
+        return equipmentDAO.findByStatus(EquipmentStatus.MAINTENANCE);
+    }
+
+    public List<Equipment> getEquipmentWithIssues() {
+        return equipmentDAO.findByStatus(EquipmentStatus.PANNE);
+    }
+
+    public void markEquipmentAsFixed(Long equipmentId) {
+        Equipment equipment = equipmentDAO.findById(equipmentId);
+        if (equipment != null && equipment.getStatus() == EquipmentStatus.PANNE) {
+            equipment.setStatus(EquipmentStatus.AVAILABLE);
+            equipmentDAO.save(equipment);
+        }
+    }
 }

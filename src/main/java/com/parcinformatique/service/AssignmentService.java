@@ -11,6 +11,7 @@ import com.parcinformatique.model.EquipmentStatus;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class AssignmentService {
 
@@ -131,5 +132,31 @@ public class AssignmentService {
     }
     public List<Assignment> getAssignmentsByEquipmentAndEmployee(Long equipmentId, Long employeeId) {
         return assignmentDAO.findByEquipmentAndEmployee(equipmentId, employeeId);
+    }
+    // ✅ MÉTHODES EMPLOYÉ
+    public List<Equipment> getAssignedEquipmentForEmployee(Long employeeId) {
+        List<Assignment> assignments = assignmentDAO.findActiveAssignmentsByEmployee(employeeId);
+        return assignments.stream()
+                .map(Assignment::getEquipment)
+                .collect(Collectors.toList());
+    }
+
+    public void reportEquipmentIssue(Long equipmentId, Long employeeId, String issueDescription) {
+        // Vérifier que l'équipement est bien assigné à cet employé
+        boolean isAssigned = assignmentDAO.hasActiveAssignmentForEquipment(equipmentId, employeeId);
+        if (!isAssigned) {
+            throw new RuntimeException("Cet équipement n'est pas assigné à vous");
+        }
+
+        Equipment equipment = equipmentDAO.findById(equipmentId);
+        if (equipment != null) {
+            equipment.setStatus(EquipmentStatus.PANNE);
+            // Vous pouvez ajouter un champ pour stocker la description de la panne
+            equipmentDAO.save(equipment);
+        }
+    }
+
+    public List<Assignment> getEmployeeAssignmentHistory(Long employeeId) {
+        return assignmentDAO.findByEmployee(employeeId);
     }
 }
