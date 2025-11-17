@@ -3,80 +3,142 @@ package com.parcinformatique.dao;
 import com.parcinformatique.model.User;
 import com.parcinformatique.model.Role;
 import com.parcinformatique.util.HibernateUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.TypedQuery;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
 
-    public User findByUsername(String username) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            return session.createQuery("FROM User WHERE username = :username", User.class)
-                    .setParameter("username", username)
-                    .uniqueResult();
-        } finally {
-            session.close();
-        }
+    private EntityManager entityManager;
+
+    public UserDAO() {
+        this.entityManager = Persistence.createEntityManagerFactory("votre-persistence-unit")
+                .createEntityManager();
     }
 
-    // Authentification
+    // ✅ TROUVER PAR USERNAME ET PASSWORD
     public User findByUsernameAndPassword(String username, String password) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            return session.createQuery("FROM User WHERE username = :username AND password = :password AND active = true", User.class)
-                    .setParameter("username", username)
-                    .setParameter("password", password)
-                    .uniqueResult();
-        } finally {
-            session.close();
+            TypedQuery<User> query = entityManager.createQuery(
+                    "SELECT u FROM User u WHERE u.username = :username AND u.password = :password",
+                    User.class
+            );
+            query.setParameter("username", username);
+            query.setParameter("password", password);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
         }
     }
 
-    // Lister tous les utilisateurs
+    // ✅ TROUVER PAR USERNAME
+    public User findByUsername(String username) {
+        try {
+            TypedQuery<User> query = entityManager.createQuery(
+                    "SELECT u FROM User u WHERE u.username = :username",
+                    User.class
+            );
+            query.setParameter("username", username);
+            return query.getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    // ✅ TROUVER PAR ID
+    public User findById(Long id) {
+        return entityManager.find(User.class, id);
+    }
+
+    // ✅ LISTER TOUS LES UTILISATEURS
     public List<User> findAll() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            return session.createQuery("FROM User ORDER BY username", User.class).list();
-        } finally {
-            session.close();
-        }
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u ORDER BY u.username",
+                User.class
+        );
+        return query.getResultList();
     }
 
+    // ✅ SAUVEGARDER (CREATE/UPDATE)
     public void save(User user) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = null;
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction = session.beginTransaction();
-            session.saveOrUpdate(user);
+            transaction.begin();
+            if (user.getId() == null) {
+                entityManager.persist(user);
+            } else {
+                entityManager.merge(user);
+            }
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             throw e;
-        } finally {
-            session.close();
         }
     }
 
-    // Vérifier si username est unique
-    public boolean isUsernameUnique(String username, Long excludeId) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
+    // ✅ SUPPRIMER
+    public void delete(Long id) {
+        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            String hql = "SELECT COUNT(u) FROM User u WHERE u.username = :username";
-            if (excludeId != null) {
-                hql += " AND u.id != :excludeId";
+            transaction.begin();
+            User user = entityManager.find(User.class, id);
+            if (user != null) {
+                entityManager.remove(user);
             }
-
-            var query = session.createQuery(hql);
-            query.setParameter("username", username);
-            if (excludeId != null) {
-                query.setParameter("excludeId", excludeId);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
+            throw e;
+        }
+    }
 
-            Long count = (Long) query.uniqueResult();
-            return count == 0;
-        } finally {
-            session.close();
+    // ✅ COMPTER PAR RÔLE
+    public long countByRole(Role role) {
+        TypedQuery<Long> query = entityManager.createQuery(
+                "SELECT COUNT(u) FROM User u WHERE u.role = :role",
+                Long.class
+        );
+        query.setParameter("role", role);
+        return query.getSingleResult();
+    }
+
+    // ✅ LISTER UTILISATEURS ACTIFS
+    public List<User> findActiveUsers() {
+        TypedQuery<User> query = entityManager.createQuery(
+                "SELECT u FROM User u WHERE u.active = true ORDER BY u.username",
+                User.class
+        );
+        return query.getResultList();
+    }
+    /*public List<User> findByRole(Role role) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.role = :role AND u.active = true";
+            return session.createQuery(hql, User.class)
+                    .setParameter("role", role)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }*/
+    public List<User> findByRole(Role role) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.role = :role AND u.active = true ORDER BY u.fullName";
+            return session.createQuery(hql, User.class)
+                    .setParameter("role", role)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
         }
     }
 }

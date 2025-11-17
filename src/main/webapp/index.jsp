@@ -35,7 +35,6 @@
                         <a href="<%= request.getContextPath() %>/auth" class="btn btn-light btn-lg px-5 shadow">
                             🔐 Se connecter
                         </a>
-
                     </div>
 
                     <!-- Fonctionnalités -->
@@ -49,16 +48,41 @@
                         </div>
                         <div class="col-md-4">
                             <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
+                                <div class="fs-1 mb-3">👥</div>
+                                <h5>Gestion des employés</h5>
+                                <p class="small mb-0">Administrez les utilisateurs et leurs rôles</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
                                 <div class="fs-1 mb-3">🔧</div>
                                 <h5>Maintenance</h5>
                                 <p class="small mb-0">Planifiez et suivez les interventions techniques</p>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Rôles et accès -->
+                    <div class="row mt-4 g-4">
                         <div class="col-md-4">
                             <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
-                                <div class="fs-1 mb-3">📈</div>
-                                <h5>Rapports</h5>
-                                <p class="small mb-0">Générez des statistiques détaillées</p></br>
+                                <div class="fs-1 mb-3">👑</div>
+                                <h5>Administrateur</h5>
+                                <p class="small mb-0">Accès complet à toutes les fonctionnalités</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
+                                <div class="fs-1 mb-3">🔧</div>
+                                <h5>Technicien</h5>
+                                <p class="small mb-0">Gestion des équipements et maintenance</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="feature-card p-4 bg-white bg-opacity-10 rounded shadow">
+                                <div class="fs-1 mb-3">👨‍💼</div>
+                                <h5>Employé</h5>
+                                <p class="small mb-0">Consultation des équipements assignés</p>
                             </div>
                         </div>
                     </div>

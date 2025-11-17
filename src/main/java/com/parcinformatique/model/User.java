@@ -22,6 +22,17 @@ public class User {
     @Column(nullable = false)
     private boolean active = true;
 
+    @Column(name = "full_name", nullable = false, length = 100)
+    private String fullName;
+
+    @Column(nullable = false, unique = true, length = 100)
+    private String email;
+
+    @Column(length = 50)
+    private String department;
+
+    @Column(name = "phone", length = 20)
+    private String phone;
 
     public User() {}
 
@@ -31,6 +42,16 @@ public class User {
         this.role = role;
     }
 
+    public User(String fullName, String email, String username, String password, Role role, String department) {
+        this.fullName = fullName;
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.role = role;
+        this.department = department;
+    }
+
+    // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -46,8 +67,20 @@ public class User {
     public boolean isActive() { return active; }
     public void setActive(boolean active) { this.active = active; }
 
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
+
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
     @Override
     public String toString() {
-        return "User{id=" + id + ", username='" + username + "', role=" + role + "}";
+        return "User{id=" + id + ", username='" + username + "', fullName='" + fullName + "', role=" + role + "}";
     }
 }

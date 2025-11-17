@@ -5,11 +5,14 @@ import com.parcinformatique.service.CategoryService;
 import com.parcinformatique.model.Equipment;
 import com.parcinformatique.model.EquipmentStatus;
 import com.parcinformatique.model.Category;
+import com.parcinformatique.model.User;
+import com.parcinformatique.model.Role;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,6 +37,7 @@ public class EquipmentServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+
         String action = request.getParameter("action");
 
         if (action == null) {
@@ -41,6 +45,12 @@ public class EquipmentServlet extends HttpServlet {
         }
 
         try {
+            // Vérifier les permissions selon l'action
+            if (!hasPermission(request, action)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès non autorisé");
+                return;
+            }
+
             switch (action) {
                 case "new":
                     showNewForm(request, response);
@@ -53,6 +63,15 @@ public class EquipmentServlet extends HttpServlet {
                     break;
                 case "available":
                     listAvailableEquipment(request, response);
+                    break;
+                case "my-equipment": // Nouvelle action pour les employés
+                    showMyEquipment(request, response);
+                    break;
+                case "technician-view": // Nouvelle action pour les techniciens
+                    showTechnicianView(request, response);
+                    break;
+                case "report-issue":
+                    showReportIssueForm(request, response);
                     break;
                 default:
                     listEquipment(request, response);
@@ -71,10 +90,20 @@ public class EquipmentServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
+            // Vérifier les permissions
+            if (!hasPermission(request, action)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès non autorisé");
+                return;
+            }
+
             if ("create".equals(action)) {
                 createEquipment(request, response);
             } else if ("update".equals(action)) {
                 updateEquipment(request, response);
+            } else if ("update-status".equals(action)) {
+                updateEquipmentStatus(request, response);
+            } else if ("report-issue".equals(action)) {
+                reportEquipmentIssue(request, response);
             } else {
                 listEquipment(request, response);
             }
@@ -85,6 +114,130 @@ public class EquipmentServlet extends HttpServlet {
                     .forward(request, response);
         }
     }
+
+    private boolean hasPermission(HttpServletRequest request, String action) {
+        HttpSession session = request.getSession(false);
+        if (session == null) return false;
+
+        User user = (User) session.getAttribute("user");
+        if (user == null) return false;
+
+        Role role = user.getRole();
+
+        // Admin a tous les droits
+        if (role == Role.ADMIN) return true;
+
+        switch (action) {
+            case "new":
+            case "edit":
+            case "delete":
+            case "create":
+            case "update":
+                // Seul admin peut créer/modifier/supprimer
+                return false;
+
+            case "update-status":
+                // Technicien peut changer le statut
+                return role == Role.TECHNICIAN;
+
+            case "report-issue":
+            case "my-equipment":
+                // Employé peut déclarer des pannes et voir son équipement
+                return role == Role.EMPLOYEE;
+
+            case "technician-view":
+                // Technicien peut voir la vue spéciale
+                return role == Role.TECHNICIAN;
+
+            default:
+                // Liste et consultation pour tous
+                return true;
+        }
+    }
+
+    // ✅ NOUVELLE MÉTHODE - Équipement de l'employé connecté
+    private void showMyEquipment(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+
+        // Ici vous devrez récupérer les équipements assignés à cet employé
+        // Via AssignmentService.getAssignedEquipmentForEmployee(user.getEmployee().getId())
+
+        List<Equipment> myEquipment = equipmentService.getAvailableEquipment(); // À adapter
+        request.setAttribute("equipmentList", myEquipment);
+        request.setAttribute("isMyEquipmentView", true);
+        request.getRequestDispatcher("/WEB-INF/views/employee/my-equipment.jsp").forward(request, response);
+    }
+
+    // ✅ NOUVELLE MÉTHODE - Vue technicien
+    private void showTechnicianView(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        List<Equipment> equipmentWithIssues = equipmentService.getEquipmentWithIssues();
+        List<Equipment> maintenanceEquipment = equipmentService.getEquipmentInMaintenance();
+
+        request.setAttribute("equipmentWithIssues", equipmentWithIssues);
+        request.setAttribute("maintenanceEquipment", maintenanceEquipment);
+        request.setAttribute("isTechnicianView", true);
+        request.getRequestDispatcher("/WEB-INF/views/technician/equipment-view.jsp").forward(request, response);
+    }
+
+    // ✅ NOUVELLE MÉTHODE - Formulaire déclaration panne
+    private void showReportIssueForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String equipmentId = request.getParameter("id");
+        if (equipmentId != null) {
+            Equipment equipment = equipmentService.getEquipmentById(Long.parseLong(equipmentId));
+            request.setAttribute("equipment", equipment);
+        }
+        request.getRequestDispatcher("/WEB-INF/views/employee/report-issue.jsp").forward(request, response);
+    }
+
+    // ✅ NOUVELLE MÉTHODE - Mise à jour statut (technicien)
+    private void updateEquipmentStatus(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            String equipmentIdParam = request.getParameter("equipmentId");
+            String statusParam = request.getParameter("status");
+
+            Long equipmentId = Long.parseLong(equipmentIdParam);
+            EquipmentStatus newStatus = EquipmentStatus.valueOf(statusParam);
+
+            equipmentService.updateEquipmentStatus(equipmentId, newStatus);
+
+            request.getSession().setAttribute("successMessage", "Statut de l'équipement mis à jour avec succès");
+            response.sendRedirect(request.getContextPath() + "/equipments?action=technician-view");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Erreur lors de la mise à jour: " + e.getMessage());
+            showTechnicianView(request, response);
+        }
+    }
+
+    // ✅ NOUVELLE MÉTHODE - Déclaration panne (employé)
+    private void reportEquipmentIssue(HttpServletRequest request, HttpServletResponse response)
+            throws IOException, ServletException {
+        try {
+            String equipmentIdParam = request.getParameter("equipmentId");
+            String issueDescription = request.getParameter("issueDescription");
+            HttpSession session = request.getSession();
+            User user = (User) session.getAttribute("user");
+
+            // Ici vous appelleriez AssignmentService.reportEquipmentIssue()
+            Long equipmentId = Long.parseLong(equipmentIdParam);
+            equipmentService.updateEquipmentStatus(equipmentId, EquipmentStatus.PANNE);
+
+            request.getSession().setAttribute("successMessage", "Panne déclarée avec succès");
+            response.sendRedirect(request.getContextPath() + "/equipments?action=my-equipment");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Erreur lors de la déclaration: " + e.getMessage());
+            showReportIssueForm(request, response);
+        }
+    }
+
 
     private void listEquipment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

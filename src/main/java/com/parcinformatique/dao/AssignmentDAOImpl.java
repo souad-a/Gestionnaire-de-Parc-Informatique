@@ -1,6 +1,8 @@
 package com.parcinformatique.dao;
 
 import com.parcinformatique.model.Assignment;
+import com.parcinformatique.model.Equipment;
+import com.parcinformatique.model.Employee;
 import com.parcinformatique.util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -103,7 +105,31 @@ public class AssignmentDAOImpl implements AssignmentDAO {
         }
     }
 
-    //  LOGIQUE MÉTIER IMPORTANTE - Vérification disponibilité équipement
+    @Override
+    public List<Assignment> findByStatus(String status) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.status = :status ORDER BY a.assignmentDate DESC",
+                    Assignment.class
+            );
+            query.setParameter("status", status);
+            return query.getResultList();
+        }
+    }
+
+    @Override
+    public List<Assignment> findAssignmentsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.assignmentDate BETWEEN :startDate AND :endDate ORDER BY a.assignmentDate",
+                    Assignment.class
+            );
+            query.setParameter("startDate", startDate);
+            query.setParameter("endDate", endDate);
+            return query.getResultList();
+        }
+    }
+
     @Override
     public boolean isEquipmentAvailable(Long equipmentId, LocalDate date) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -116,10 +142,37 @@ public class AssignmentDAOImpl implements AssignmentDAO {
             query.setParameter("equipmentId", equipmentId);
             query.setParameter("date", date);
             Long count = query.uniqueResult();
-            return count == 0; // Disponible si aucun assignment actif
+            return count == 0;
         }
     }
 
+    @Override
+    public boolean hasActiveAssignment(Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery(
+                    "SELECT COUNT(a) FROM Assignment a WHERE a.employee.id = :employeeId AND a.status = 'ACTIVE'",
+                    Long.class
+            );
+            query.setParameter("employeeId", employeeId);
+            Long count = query.uniqueResult();
+            return count > 0;
+        }
+    }
+
+    @Override
+    public int countActiveAssignmentsByEmployee(Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery(
+                    "SELECT COUNT(a) FROM Assignment a WHERE a.employee.id = :employeeId AND a.status = 'ACTIVE'",
+                    Long.class
+            );
+            query.setParameter("employeeId", employeeId);
+            Long count = query.uniqueResult();
+            return count != null ? count.intValue() : 0;
+        }
+    }
+
+    @Override
     public List<Assignment> findByEquipmentAndEmployee(Long equipmentId, Long employeeId) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Query<Assignment> query = session.createQuery(
@@ -129,6 +182,79 @@ public class AssignmentDAOImpl implements AssignmentDAO {
             );
             query.setParameter("equipmentId", equipmentId);
             query.setParameter("employeeId", employeeId);
+            return query.getResultList();
+        }
+    }
+
+    // ✅ MÉTHODES MANQUANTES À AJOUTER
+
+    @Override
+    public boolean hasActiveAssignmentForEquipment(Long equipmentId, Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery(
+                    "SELECT COUNT(a) FROM Assignment a WHERE a.equipment.id = :equipmentId " +
+                            "AND a.employee.id = :employeeId AND a.status = 'ACTIVE'",
+                    Long.class
+            );
+            query.setParameter("equipmentId", equipmentId);
+            query.setParameter("employeeId", employeeId);
+            Long count = query.uniqueResult();
+            return count != null && count > 0;
+        }
+    }
+
+    @Override
+    public List<Assignment> findActiveAssignmentsByEmployee(Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.employee.id = :employeeId " +
+                            "AND a.status = 'ACTIVE' ORDER BY a.assignmentDate DESC",
+                    Assignment.class
+            );
+            query.setParameter("employeeId", employeeId);
+            return query.getResultList();
+        }
+    }
+
+    // ✅ MÉTHODE ADDITIONNELLE POUR LES STATISTIQUES
+    @Override
+    public long countActiveAssignments() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Long> query = session.createQuery(
+                    "SELECT COUNT(a) FROM Assignment a WHERE a.status = 'ACTIVE'",
+                    Long.class
+            );
+            Long count = query.uniqueResult();
+            return count != null ? count : 0;
+        }
+    }
+
+    // ✅ MÉTHODE POUR TROUVER LES AFFECTATIONS ACTIVES PAR ÉQUIPEMENT
+    @Override
+    public List<Assignment> findActiveAssignmentsByEquipment(Long equipmentId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.equipment.id = :equipmentId " +
+                            "AND a.status = 'ACTIVE' ORDER BY a.assignmentDate DESC",
+                    Assignment.class
+            );
+            query.setParameter("equipmentId", equipmentId);
+            return query.getResultList();
+        }
+    }
+
+    // ✅ MÉTHODE POUR TROUVER LES AFFECTATIONS AVEC RETOUR EN RETARD
+    @Override
+    public List<Assignment> findOverdueAssignments(LocalDate currentDate) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Assignment> query = session.createQuery(
+                    "FROM Assignment a WHERE a.status = 'ACTIVE' " +
+                            "AND a.expectedReturnDate IS NOT NULL " +
+                            "AND a.expectedReturnDate < :currentDate " +
+                            "ORDER BY a.expectedReturnDate ASC",
+                    Assignment.class
+            );
+            query.setParameter("currentDate", currentDate);
             return query.getResultList();
         }
     }

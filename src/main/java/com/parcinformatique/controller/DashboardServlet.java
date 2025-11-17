@@ -1,95 +1,132 @@
 package com.parcinformatique.controller;
 
-import com.parcinformatique.dao.*;
-import com.parcinformatique.model.*;
+import com.parcinformatique.model.User;
+import com.parcinformatique.model.Role;
+import com.parcinformatique.service.EquipmentService;
+import com.parcinformatique.service.UserService;
+import com.parcinformatique.service.AssignmentService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.List;
 
-@WebServlet("/dashboard")
+/**
+ * Servlet pour gérer les tableaux de bord selon les rôles
+ * Calcule les statistiques principales et redirige vers la vue appropriée
+ */
+@WebServlet({"/dashboard", "/admin/dashboard", "/technician/dashboard", "/employee/dashboard"})
 public class DashboardServlet extends HttpServlet {
 
-    private EquipmentDAO equipmentDAO;
-    private EmployeeDAO employeeDAO;
-    private CategoryDAO categoryDAO;
-    private AssignmentDAO assignmentDAO;
+    private EquipmentService equipmentService;
+    private UserService userService;
+    private AssignmentService assignmentService;
 
     @Override
     public void init() throws ServletException {
-        equipmentDAO = new EquipmentDAO();
-        employeeDAO = new EmployeeDAO();
-        categoryDAO = new CategoryDAO();
-        assignmentDAO = new AssignmentDAOImpl();
+        this.equipmentService = new EquipmentService();
+        this.userService = new UserService();
+        this.assignmentService = new AssignmentService();
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        HttpSession session = request.getSession(false);
+        if (session == null || session.getAttribute("user") == null) {
+            response.sendRedirect(request.getContextPath() + "/auth?action=login");
+            return;
+        }
+
+        User user = (User) session.getAttribute("user");
+        Role role = user.getRole();
+
+        System.out.println("📊 Dashboard accédé par: " + user.getUsername() + " - Rôle: " + role);
+
+        // Calculer les statistiques selon le rôle
+        calculateStatistics(request, role);
+
+        // Déterminer la page JSP selon le rôle
+        String jspPage = determineDashboardPage(role);
+        request.getRequestDispatcher(jspPage).forward(request, response);
+    }
+
+    /**
+     * Calcule les statistiques principales selon le rôle de l'utilisateur
+     */
+    private void calculateStatistics(HttpServletRequest request, Role role) {
         try {
-            // Récupérer toutes les données
-            List<Equipment> allEquipments = equipmentDAO.findAll();
-            List<Employee> allEmployees = employeeDAO.findAll();
-            List<Category> allCategories = categoryDAO.findAll();
-            List<Assignment> activeAssignments = assignmentDAO.findActiveAssignments();
+            // Statistiques communes
+            long totalEquipment = equipmentService.getAllEquipment().size();
+            long availableEquipment = equipmentService.getAvailableEquipment().size();
+            long assignedEquipment = equipmentService.getAssignedEquipmentCount().size();
+            long maintenanceEquipment = equipmentService.getMaintenanceEquipmentCount().size();
+            long totalUsers = userService.getAllUsers().size();
+            long activeAssignments = assignmentService.getActiveAssignments().size();
 
-            // Calculer les statistiques des équipements
-            long totalEquipments = allEquipments.size();
-            long availableEquipments = allEquipments.stream()
-                    .filter(e -> e.getStatus() == EquipmentStatus.AVAILABLE)
-                    .count();
-            long inUseEquipments = allEquipments.stream()
-                    .filter(e -> e.getStatus() == EquipmentStatus.ASSIGNED)
-                    .count();
-            long maintenanceEquipments = allEquipments.stream()
-                    .filter(e -> e.getStatus() == EquipmentStatus.MAINTENANCE)
-                    .count();
-            long outOfServiceEquipments = allEquipments.stream()
-                    .filter(e -> e.getStatus() == EquipmentStatus.OUT_OF_SERVICE)
-                    .count();
+            // Passer les statistiques à la vue
+            request.setAttribute("totalEquipment", totalEquipment);
+            request.setAttribute("availableEquipment", availableEquipment);
+            request.setAttribute("assignedEquipment", assignedEquipment);
+            request.setAttribute("maintenanceEquipment", maintenanceEquipment);
+            request.setAttribute("totalUsers", totalUsers);
+            request.setAttribute("activeAssignments", activeAssignments);
 
-            // Calculer les taux
-            double utilizationRate = totalEquipments > 0 ?
-                    (inUseEquipments * 100.0) / totalEquipments : 0;
-            double maintenanceRate = totalEquipments > 0 ?
-                    (maintenanceEquipments * 100.0) / totalEquipments : 0;
-            double availabilityRate = totalEquipments > 0 ?
-                    (availableEquipments * 100.0) / totalEquipments : 0;
+            // Statistiques spécifiques selon le rôle
+            switch (role) {
+                case ADMIN:
+                    // Statistiques complètes pour l'admin
+                    long totalEmployees = userService.getUsersByRole(Role.EMPLOYEE).size();
+                    long totalTechnicians = userService.getUsersByRole(Role.TECHNICIAN).size();
+                    request.setAttribute("totalEmployees", totalEmployees);
+                    request.setAttribute("totalTechnicians", totalTechnicians);
+                    break;
 
-            // Préparer les attributs pour la JSP
-            request.setAttribute("totalEquipments", totalEquipments);
-            request.setAttribute("availableEquipments", availableEquipments);
-            request.setAttribute("inUseEquipments", inUseEquipments);
-            request.setAttribute("maintenanceEquipments", maintenanceEquipments);
-            request.setAttribute("outOfServiceEquipments", outOfServiceEquipments);
-            request.setAttribute("utilizationRate", Math.round(utilizationRate * 100.0) / 100.0);
-            request.setAttribute("maintenanceRate", Math.round(maintenanceRate * 100.0) / 100.0);
-            request.setAttribute("availabilityRate", Math.round(availabilityRate * 100.0) / 100.0);
+                case TECHNICIAN:
+                    // Statistiques pour le technicien (équipements en maintenance, pannes)
+                    long equipmentWithIssues = equipmentService.getEquipmentWithIssues().size();
+                    request.setAttribute("equipmentWithIssues", equipmentWithIssues);
+                    break;
 
-            request.setAttribute("totalEmployees", allEmployees.size());
-            request.setAttribute("totalCategories", allCategories.size());
-            request.setAttribute("activeAssignments", activeAssignments.size());
-
-            // Ajouter les statistiques détaillées
-            EquipmentStats stats = new EquipmentStats(allEquipments);
-            request.setAttribute("stats", stats);
-
-            // Log pour debug
-            System.out.println("📊 Dashboard stats - Équipements: " + totalEquipments +
-                    ", Disponibles: " + availableEquipments +
-                    ", Utilisés: " + inUseEquipments);
-
-            // Forward vers la page dashboard
-            request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
+                case EMPLOYEE:
+                    // Statistiques pour l'employé (ses équipements assignés)
+                    // Note: nécessite l'ID de l'employé, à adapter selon votre modèle
+                    // Pour l'instant, on passe 0 comme valeur par défaut
+                    request.setAttribute("myAssignments", 0);
+                    break;
+            }
 
         } catch (Exception e) {
+            System.err.println("Erreur lors du calcul des statistiques: " + e.getMessage());
             e.printStackTrace();
-            request.setAttribute("error", "Erreur lors du chargement du dashboard: " + e.getMessage());
-            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+            // Valeurs par défaut en cas d'erreur
+            request.setAttribute("totalEquipment", 0);
+            request.setAttribute("availableEquipment", 0);
+            request.setAttribute("assignedEquipment", 0);
+            request.setAttribute("maintenanceEquipment", 0);
+            request.setAttribute("totalUsers", 0);
+            request.setAttribute("activeAssignments", 0);
+        }
+    }
+
+    /**
+     * Détermine la page JSP à afficher selon le rôle
+     */
+    private String determineDashboardPage(Role role) {
+        if (role == null) return "/WEB-INF/views/dashboard.jsp";
+
+        switch (role) {
+            case ADMIN:
+                return "/WEB-INF/views/admin/dashboard.jsp";
+            case TECHNICIAN:
+                return "/WEB-INF/views/technician/dashboard.jsp";
+            case EMPLOYEE:
+                return "/WEB-INF/views/employee/dashboard.jsp";
+            default:
+                return "/WEB-INF/views/dashboard.jsp";
         }
     }
 }

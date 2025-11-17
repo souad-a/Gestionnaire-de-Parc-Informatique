@@ -1,11 +1,13 @@
+// 📁 src/main/java/com/parcinformatique/model/EquipmentStatus.java
 package com.parcinformatique.model;
 
 public enum EquipmentStatus {
-    AVAILABLE,
-    ASSIGNED,
-    MAINTENANCE,
+    AVAILABLE,      // Disponible
+    ASSIGNED,       // Assigné à un employé
+    MAINTENANCE,    // En maintenance
     OUT_OF_ORDER,
-    RESERVED, OUT_OF_SERVICE;
+    PANNE, // Hors service
+    RESERVED, OUT_OF_SERVICE;       // Réservé
 
     @Override
     public String toString() {
@@ -14,6 +16,7 @@ public enum EquipmentStatus {
             case ASSIGNED: return "Assigné";
             case MAINTENANCE: return "En maintenance";
             case OUT_OF_ORDER: return "Hors service";
+            case PANNE: return "En panne";
             case RESERVED: return "Réservé";
             default: return name();
         }
