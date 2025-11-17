@@ -3,8 +3,6 @@ package com.parcinformatique.controller;
 import com.parcinformatique.model.Assignment;
 import com.parcinformatique.model.Equipment;
 import com.parcinformatique.model.Employee;
-import com.parcinformatique.model.User;
-import com.parcinformatique.model.Role;
 import com.parcinformatique.service.AssignmentService;
 import com.parcinformatique.service.EquipmentService;
 import com.parcinformatique.service.EmployeeService;
@@ -13,7 +11,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -46,12 +43,6 @@ public class AssignmentServlet extends HttpServlet {
         String action = request.getPathInfo();
 
         try {
-            // Vérifier les permissions
-            if (!hasPermission(request, action)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès non autorisé");
-                return;
-            }
-
             switch (action == null ? "list" : action) {
                 case "/new":
                     showAssignmentForm(request, response);
@@ -64,9 +55,6 @@ public class AssignmentServlet extends HttpServlet {
                     break;
                 case "/return":
                     showReturnForm(request, response);
-                    break;
-                case "/my-assignments": // Nouvelle action pour les employés
-                    showMyAssignments(request, response);
                     break;
                 default:
                     listAssignments(request, response);
@@ -86,12 +74,6 @@ public class AssignmentServlet extends HttpServlet {
         String action = request.getPathInfo();
 
         try {
-            // Vérifier les permissions
-            if (!hasPermission(request, action)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès non autorisé");
-                return;
-            }
-
             switch (action) {
                 case "/assign":
                     assignEquipment(request, response);
@@ -110,71 +92,6 @@ public class AssignmentServlet extends HttpServlet {
         }
     }
 
-    private boolean hasPermission(HttpServletRequest request, String action) {
-        HttpSession session = request.getSession(false);
-        if (session == null) return false;
-
-        User user = (User) session.getAttribute("user");
-        if (user == null) return false;
-
-        Role role = user.getRole();
-
-        // Admin a tous les droits
-        if (role == Role.ADMIN) return true;
-
-        switch (action) {
-            case "/new":
-            case "/assign":
-            case "/return":
-                // Seul admin peut assigner/retourner
-                return false;
-
-            case "/my-assignments":
-                // Employé peut voir ses propres affectations
-                return role == Role.EMPLOYEE;
-
-            case "/history":
-            case "/active":
-            case "list":
-                // Technicien et Employé peuvent consulter (avec restrictions)
-                return role == Role.TECHNICIAN || role == Role.EMPLOYEE;
-
-            default:
-                return true;
-        }
-    }
-
-    // ✅ NOUVELLE MÉTHODE - Affectations de l'employé connecté
-    private void showMyAssignments(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-
-        // Récupérer l'ID de l'employé connecté (à adapter selon votre modèle)
-        Long employeeId = getEmployeeIdFromUser(user);
-
-        if (employeeId != null) {
-            List<Assignment> myAssignments = assignmentService.getAssignmentsByEmployee(employeeId);
-            List<Assignment> activeAssignments = assignmentService.getActiveAssignments().stream()
-                    .filter(assignment -> assignment.getEmployee().getId().equals(employeeId))
-                    .toList();
-
-            request.setAttribute("assignments", myAssignments);
-            request.setAttribute("activeAssignments", activeAssignments);
-            request.setAttribute("isMyAssignmentsView", true);
-        }
-
-        request.getRequestDispatcher("/WEB-INF/views/employee/my-assignments.jsp")
-                .forward(request, response);
-    }
-
-    // Méthode utilitaire pour récupérer l'ID employé
-    private Long getEmployeeIdFromUser(User user) {
-        // À adapter selon votre modèle de données
-        // Si User a une référence à Employee, retournez user.getEmployee().getId()
-        // Sinon, vous devrez peut-être faire une requête pour trouver l'employé associé
-        return null; // Temporaire - à implémenter
-    }
     private void listAssignments(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 

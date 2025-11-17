@@ -2,6 +2,9 @@ package com.parcinformatique.model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "employees")
 public class Employee {
@@ -18,18 +21,15 @@ public class Employee {
     @Column(nullable = false, length = 100)
     private String department;
 
-    @Column(nullable = false, length = 100, unique = true)
+    @Column(unique = true, length = 100)
     private String email;
 
     @Column(length = 20)
     private String phone;
 
-    // ✅ AJOUTER LA RELATION AVEC USER
-    @OneToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @OneToMany(mappedBy = "employee")
+    private List<Assignment> assignments = new ArrayList<>();
 
-    // Constructeurs
     public Employee() {}
 
     public Employee(String firstName, String lastName, String department, String email, String phone) {
@@ -40,72 +40,33 @@ public class Employee {
         this.phone = phone;
     }
 
-    // Getters et Setters
-    public Long getId() {
-        return id;
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getDepartment() { return department; }
+    public void setDepartment(String department) { this.department = department; }
 
-    public String getFirstName() {
-        return firstName;
-    }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    // ✅ AJOUTER GETTER ET SETTER POUR USER
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
+    public List<Assignment> getAssignments() { return assignments; }
+    public void setAssignments(List<Assignment> assignments) { this.assignments = assignments; }
 
     @Override
     public String toString() {
-        return "Employee{id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", department='" + department + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                '}';
+        return "Employee{id=" + id + ", name='" + getFullName() + "', department='" + department + "'}";
     }
 }
