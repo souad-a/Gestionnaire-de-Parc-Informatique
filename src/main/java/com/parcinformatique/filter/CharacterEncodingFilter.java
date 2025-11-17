@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/filter/CharacterEncodingFilter.java
 package com.parcinformatique.filter;
 
 import jakarta.servlet.*;

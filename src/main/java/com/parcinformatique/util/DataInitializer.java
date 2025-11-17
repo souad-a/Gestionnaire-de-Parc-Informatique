@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/util/DataInitializer.java
 package com.parcinformatique.util;
 
 import com.parcinformatique.dao.UserDAO;
@@ -20,7 +19,7 @@ public class DataInitializer {
             User tech = new User("technicien", "tech123", Role.TECHNICIAN);
             userDAO.save(tech);
 
-            System.out.println("✅ Utilisateurs de test créés :");
+            System.out.println(" Utilisateurs de test créés :");
             System.out.println("   - admin / admin123 (ADMIN)");
             System.out.println("   - technicien / tech123 (TECHNICIAN)");
         }

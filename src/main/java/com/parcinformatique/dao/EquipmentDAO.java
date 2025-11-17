@@ -1,4 +1,3 @@
-// 📁 src/main/java/com/parcinformatique/dao/EquipmentDAO.java
 package com.parcinformatique.dao;
 
 import com.parcinformatique.model.Equipment;
@@ -63,7 +62,7 @@ public class EquipmentDAO {
     public List<Equipment> findAvailableEquipment() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {
-            // ✅ CORRECTION : Ajouter LEFT JOIN FETCH pour charger les catégories
+            // LEFT JOIN FETCH pour charger les catégories
             Query<Equipment> query = session.createQuery(
                     "FROM Equipment e LEFT JOIN FETCH e.category WHERE e.status = :status ORDER BY e.name",
                     Equipment.class
@@ -141,15 +140,5 @@ public class EquipmentDAO {
         }
     }
 
-    public long countByStatus(EquipmentStatus status) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        try {
-            Query<Long> query = session.createQuery(
-                    "SELECT COUNT(e) FROM Equipment e WHERE e.status = :status", Long.class);
-            query.setParameter("status", status);
-            return query.uniqueResult();
-        } finally {
-            session.close();
-        }
-    }
+
 }

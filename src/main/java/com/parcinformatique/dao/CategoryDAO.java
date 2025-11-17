@@ -44,7 +44,6 @@ public class CategoryDAO {
         }
     }
 
-    // Supprimer
     public void delete(Long id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction transaction = null;
@@ -69,8 +68,9 @@ public class CategoryDAO {
         try {
             String hql = "SELECT COUNT(c) FROM Category c WHERE c.name = :name";
             if (excludeId != null) {
-                hql += " AND c.id != :excludeId";//en cas de modif verifie s'ilexiste une autre
-                // catégorie portant le meme nom mais dont l'id est différente de celui ci
+                hql += " AND c.id != :excludeId";// En cas de modification, vérifier qu’aucune autre catégorie ne possède
+                                                // le même nom avec un ID différent.
+
             }
 
             var query = session.createQuery(hql);

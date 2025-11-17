@@ -3,7 +3,7 @@ package com.parcinformatique.service;
 import com.parcinformatique.dao.EquipmentDAO;
 import com.parcinformatique.model.Equipment;
 import com.parcinformatique.model.EquipmentStatus;
-import com.parcinformatique.model.Category;
+
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -83,16 +83,16 @@ public class EquipmentService {
     }
 
     // ✅ STATISTIQUES
-    public long getAvailableEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.AVAILABLE);
+    public List<Equipment> getAvailableEquipmentCount() {
+        return equipmentDAO.findByStatus(EquipmentStatus.AVAILABLE);
     }
 
-    public long getAssignedEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.ASSIGNED);
+    public List<Equipment> getAssignedEquipmentCount() {
+        return equipmentDAO.findByStatus(EquipmentStatus.ASSIGNED);
     }
 
-    public long getMaintenanceEquipmentCount() {
-        return equipmentDAO.countByStatus(EquipmentStatus.MAINTENANCE);
+    public List<Equipment> getMaintenanceEquipmentCount() {
+        return equipmentDAO.findByStatus(EquipmentStatus.MAINTENANCE);
     }
 
     // ✅ VÉRIFICATIONS MÉTIER

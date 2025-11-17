@@ -29,6 +29,8 @@ public class Assignment {
 
     private String notes;
 
+
+
     // Constructeurs
     public Assignment() {}
 

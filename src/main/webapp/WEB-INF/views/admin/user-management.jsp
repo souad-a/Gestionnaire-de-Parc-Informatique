@@ -82,7 +82,7 @@
                         </h5>
                     </div>
                     <div class="card-body">
-                        <form action="${pageContext.request.contextPath}/admin/employees" method="post" id="userForm">
+                        <form action="${pageContext.request.contextPath}/admin/user-management" method="post" id="userForm">
                             <input type="hidden" name="action" value="createUser">
 
                             <!-- Informations personnelles -->

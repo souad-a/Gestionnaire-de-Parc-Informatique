@@ -130,7 +130,7 @@ public class CategoryServlet extends HttpServlet {
         }
     }
 
-    // 🛡️ GESTION CENTRALISÉE DES EXCEPTIONS
+    //  GESTION CENTRALISÉE DES EXCEPTIONS
     private void handleException(HttpServletRequest request, HttpServletResponse response, Exception e)
             throws ServletException, IOException {
         e.printStackTrace();

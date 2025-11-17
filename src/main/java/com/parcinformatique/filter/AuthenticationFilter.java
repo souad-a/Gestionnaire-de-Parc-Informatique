@@ -16,67 +16,48 @@ public class AuthenticationFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse res = (HttpServletResponse) response;
+        String path = req.getRequestURI().substring(req.getContextPath().length());
 
-        String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
-
-        // Pages publiques (pas besoin d'être connecté)
-        if (path.startsWith("/auth") ||
-                path.equals("/") ||
-                path.startsWith("/resources/") ||
-                path.contains(".css") ||
-                path.contains(".js") ||
-                path.contains(".jpg") ||
-                path.contains(".png")) {
-
+        // Pages publiques
+        if (path.startsWith("/auth") || path.equals("/") || path.startsWith("/resources/") ||
+                path.contains(".css") || path.contains(".js") || path.contains(".jpg") || path.contains(".png")) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Vérifier la session
-        HttpSession session = httpRequest.getSession(false);
+        HttpSession session = req.getSession(false);
         if (session == null || session.getAttribute("user") == null) {
-            // Non connecté → redirection vers login
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/auth?action=login");
+            res.sendRedirect(req.getContextPath() + "/auth?action=login");
             return;
         }
 
-        // Vérifier les autorisations selon le rôle
         User user = (User) session.getAttribute("user");
-        if (!hasPermission(user.getRole(), path)) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé - Vous n'avez pas les permissions nécessaires");
+        Role role = user.getRole();
+
+        // Debug
+        System.out.println("🔑 Filtre: User=" + user.getUsername() + ", Role=" + role + ", Path=" + path);
+
+        if (!hasPermission(role, path)) {
+            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Accès refusé - permissions insuffisantes");
             return;
         }
 
-        // Utilisateur connecté et autorisé → continuer
         chain.doFilter(request, response);
     }
 
     private boolean hasPermission(Role role, String path) {
-        // Admin a accès à tout
-        if (role == Role.ADMIN) {
-            return true;
-        }
+        if (role == Role.ADMIN) return true;
 
-        // Routes communes à tous les rôles connectés
-        if (path.equals("/dashboard") || path.startsWith("/profile")) {
-            return true;
-        }
+        if (path.equals("/dashboard") || path.startsWith("/profile")) return true;
 
-        // Permissions par rôle
         switch (role) {
             case TECHNICIAN:
-                return path.startsWith("/equipments") ||
-                        path.startsWith("/technician") ||
-                        path.startsWith("/categories");
-
+                return path.startsWith("/equipments") || path.startsWith("/technician") || path.startsWith("/categories");
             case EMPLOYEE:
-                return path.startsWith("/assignments") ||
-                        path.startsWith("/employee") ||
-                        (path.startsWith("/equipments") &&
-                                (path.contains("?action=my-equipment") || path.equals("/equipments")));
-
+                return path.startsWith("/assignments") || path.startsWith("/employee") ||
+                        (path.startsWith("/equipments") && (path.contains("?action=my-equipment") || path.equals("/equipments")));
             default:
                 return false;
         }

@@ -41,7 +41,6 @@ public class EmployeeDAO {
         }
     }
 
-    // Nouvelle méthode pour récupérer tous les départements distincts
     public List<String> findAllDepartments() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         try {

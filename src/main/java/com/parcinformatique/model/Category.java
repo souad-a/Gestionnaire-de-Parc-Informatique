@@ -1,7 +1,8 @@
 package com.parcinformatique.model;
 
-// ⚠️ REMPLACER javax.persistence par jakarta.persistence
 import jakarta.persistence.*;
+
+import java.util.List;
 
 
 @Entity
@@ -17,16 +18,19 @@ public class Category {
     @Column(length = 255)
     private String description;
 
-    // ✅ OK - Constructeur par défaut
+    @OneToMany(mappedBy = "category")
+    private List<Equipment> equipments;
+
+    // Constructeur par défaut
     public Category() {}
 
-    // ✅ OK - Constructeur avec paramètres
+    // Constructeur avec paramètres
     public Category(String name, String description) {
         this.name = name;
         this.description = description;
     }
 
-    // ✅ OK - Getters et Setters
+    // Getters et Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 

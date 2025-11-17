@@ -2,10 +2,14 @@ package com.parcinformatique.dao;
 
 import com.parcinformatique.model.User;
 import com.parcinformatique.model.Role;
+import com.parcinformatique.util.HibernateUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.TypedQuery;
+import org.hibernate.Session;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDAO {
@@ -114,5 +118,27 @@ public class UserDAO {
                 User.class
         );
         return query.getResultList();
+    }
+    /*public List<User> findByRole(Role role) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.role = :role AND u.active = true";
+            return session.createQuery(hql, User.class)
+                    .setParameter("role", role)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }*/
+    public List<User> findByRole(Role role) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            String hql = "FROM User u WHERE u.role = :role AND u.active = true ORDER BY u.fullName";
+            return session.createQuery(hql, User.class)
+                    .setParameter("role", role)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
     }
 }

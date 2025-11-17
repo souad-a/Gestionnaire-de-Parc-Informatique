@@ -37,6 +37,11 @@ public class UserService {
         return userDAO.findAll();
     }
 
+    // ✅ NOUVELLE MÉTHODE : Lister les utilisateurs par rôle (pour les employés)
+    public List<User> getUsersByRole(Role role) {
+        return userDAO.findByRole(role);
+    }
+
     // ✅ RECHERCHER UTILISATEUR PAR ID
     public User getUserById(Long id) {
         return userDAO.findById(id);
@@ -95,4 +100,5 @@ public class UserService {
     public long countUsersByRole(Role role) {
         return userDAO.countByRole(role);
     }
+
 }

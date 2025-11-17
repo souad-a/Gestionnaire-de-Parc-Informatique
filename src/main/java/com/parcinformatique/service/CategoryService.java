@@ -12,7 +12,6 @@ public class CategoryService {
         this.categoryDAO = new CategoryDAO();
     }
 
-    // 📊 MÉTHODES MÉTIER
 
     public List<Category> getAllCategories() {
         return categoryDAO.findAll();
@@ -67,16 +66,11 @@ public class CategoryService {
             throw new IllegalArgumentException("Catégorie non trouvée avec l'ID: " + id);
         }
 
-        // 🔍  RÈGLES MÉTIER à AJOUTER PLUS TARD
-        //  Vérifier qu'aucun équipement n'utilise cette catégorie
-        // if (!category.getEquipments().isEmpty()) {
-        //     throw new IllegalStateException("Impossible de supprimer : catégorie utilisée par des équipements");
-        // }
+
 
         categoryDAO.delete(id);
     }
 
-    // ✅ VALIDATION MÉTIER
     private void validateCategoryData(String name) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Le nom de la catégorie est obligatoire");
@@ -89,23 +83,4 @@ public class CategoryService {
         }
     }
 
-    // 🔍 MÉTHODES MÉTIER SPÉCIFIQUES
-    public boolean isCategoryNameUnique(String name, Long excludeId) {
-        return categoryDAO.isNameUnique(name, excludeId);
-    }
-
-    public List<Category> searchCategories(String keyword) {
-        // Implémentation future pour la recherche
-        // Pour l'instant, filtre manuellement
-        List<Category> allCategories = getAllCategories();
-        if (keyword == null || keyword.trim().isEmpty()) {
-            return allCategories;
-        }
-
-        String lowerKeyword = keyword.toLowerCase();
-        return allCategories.stream()
-                .filter(c -> c.getName().toLowerCase().contains(lowerKeyword) ||
-                        (c.getDescription() != null && c.getDescription().toLowerCase().contains(lowerKeyword)))
-                .toList();
-    }
 }

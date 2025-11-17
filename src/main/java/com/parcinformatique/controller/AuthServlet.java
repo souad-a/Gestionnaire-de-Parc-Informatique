@@ -3,6 +3,7 @@ package com.parcinformatique.controller;
 
 import com.parcinformatique.model.User;
 import com.parcinformatique.model.Role;
+import com.parcinformatique.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -11,12 +12,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 
+/**
+ * Servlet pour gérer l'authentification (login/logout)
+ * Utilise UserService pour l'authentification avec la base de données
+ */
 @WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
 
+    private UserService userService;
+
     @Override
     public void init() throws ServletException {
-        System.out.println("✅ AuthServlet initialisé avec succès");
+        this.userService = new UserService();
+        System.out.println("✅ AuthServlet initialisé avec UserService");
     }
 
     @Override
@@ -46,8 +54,8 @@ public class AuthServlet extends HttpServlet {
 
         System.out.println("🔐 Tentative de connexion: " + username);
 
-        // Authentification simple sans base de données
-        User user = authenticateSimple(username, password);
+        // Authentification via UserService (base de données) avec fallback pour développement
+        User user = authenticateUser(username, password);
 
         if (user != null) {
             // Connexion réussie
@@ -71,24 +79,45 @@ public class AuthServlet extends HttpServlet {
         }
     }
 
-    private User authenticateSimple(String username, String password) {
-        // Utilisateurs de test
+    /**
+     * Authentifie un utilisateur via UserService (base de données)
+     * Avec fallback pour utilisateurs de test en développement
+     */
+    private User authenticateUser(String username, String password) {
+        // Essayer d'abord avec la base de données via UserService
+        try {
+            User user = userService.authenticate(username, password);
+            if (user != null) {
+                return user;
+            }
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'authentification via UserService: " + e.getMessage());
+        }
+
+        // Fallback: Utilisateurs de test (pour développement uniquement)
+        // À supprimer en production
         if ("admin".equals(username) && "admin123".equals(password)) {
             User user = new User("admin", "admin123", Role.ADMIN);
             user.setId(1L);
             user.setActive(true);
+            user.setFullName("Administrateur");
+            user.setEmail("admin@parcinformatique.com");
             return user;
         }
         if ("technicien".equals(username) && "tech123".equals(password)) {
             User user = new User("technicien", "tech123", Role.TECHNICIAN);
             user.setId(2L);
             user.setActive(true);
+            user.setFullName("Technicien");
+            user.setEmail("technicien@parcinformatique.com");
             return user;
         }
         if ("employe".equals(username) && "emp123".equals(password)) {
             User user = new User("employe", "emp123", Role.EMPLOYEE);
             user.setId(3L);
             user.setActive(true);
+            user.setFullName("Employé");
+            user.setEmail("employe@parcinformatique.com");
             return user;
         }
         return null;
