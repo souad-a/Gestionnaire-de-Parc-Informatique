@@ -3,10 +3,8 @@ package com.parcinformatique.service;
 import com.parcinformatique.dao.EquipmentDAO;
 import com.parcinformatique.model.Equipment;
 import com.parcinformatique.model.EquipmentStatus;
-
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 public class EquipmentService {
 
@@ -16,7 +14,6 @@ public class EquipmentService {
         this.equipmentDAO = new EquipmentDAO();
     }
 
-    // ✅ CRUD METHODS
     public List<Equipment> getAllEquipment() {
         return equipmentDAO.findAll();
     }
@@ -25,20 +22,10 @@ public class EquipmentService {
         return equipmentDAO.findById(id);
     }
 
-    public List<Equipment> getEquipmentByStatus(EquipmentStatus status) {
-        return equipmentDAO.findByStatus(status);
-    }
-
-    public List<Equipment> getEquipmentByCategory(Long categoryId) {
-        return equipmentDAO.findByCategory(categoryId);
-    }
-
-    // ✅ MÉTHODE SPÉCIFIQUE POUR ASSIGNMENT
     public List<Equipment> getAvailableEquipment() {
         return equipmentDAO.findAvailableEquipment();
     }
 
-    // ✅ GESTION ÉQUIPEMENT
     public void saveEquipment(Equipment equipment) {
         validateEquipment(equipment);
         equipmentDAO.save(equipment);
@@ -46,13 +33,12 @@ public class EquipmentService {
 
     public void updateEquipment(Equipment equipment) {
         validateEquipment(equipment);
-        equipmentDAO.save(equipment); // Utilise save() qui fait merge()
+        equipmentDAO.save(equipment);
     }
 
     public void deleteEquipment(Long id) {
         Equipment equipment = equipmentDAO.findById(id);
         if (equipment != null) {
-            // Vérifier si l'équipement est assigné
             if (equipment.getStatus() == EquipmentStatus.ASSIGNED) {
                 throw new RuntimeException("Impossible de supprimer un équipement assigné");
             }
@@ -60,7 +46,6 @@ public class EquipmentService {
         }
     }
 
-    // ✅ VALIDATION
     private void validateEquipment(Equipment equipment) {
         if (equipment.getName() == null || equipment.getName().trim().isEmpty()) {
             throw new RuntimeException("Le nom de l'équipement est obligatoire");
@@ -82,75 +67,6 @@ public class EquipmentService {
         }
     }
 
-    // ✅ STATISTIQUES
-    public List<Equipment> getAvailableEquipmentCount() {
-        return equipmentDAO.findByStatus(EquipmentStatus.AVAILABLE);
+
     }
 
-    public List<Equipment> getAssignedEquipmentCount() {
-        return equipmentDAO.findByStatus(EquipmentStatus.ASSIGNED);
-    }
-
-    public List<Equipment> getMaintenanceEquipmentCount() {
-        return equipmentDAO.findByStatus(EquipmentStatus.MAINTENANCE);
-    }
-
-    // ✅ VÉRIFICATIONS MÉTIER
-    public boolean isEquipmentAvailable(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        return equipment != null && equipment.getStatus() == EquipmentStatus.AVAILABLE;
-    }
-
-    public Optional<Equipment> findBySerialNumber(String serialNumber) {
-        return equipmentDAO.findBySerialNumber(serialNumber);
-    }
-
-    // ✅ CHANGEMENT DE STATUT
-    public void markAsAssigned(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.ASSIGNED);
-            equipmentDAO.save(equipment);
-        }
-    }
-
-    public void markAsAvailable(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.AVAILABLE);
-            equipmentDAO.save(equipment);
-        }
-    }
-
-    public void markAsMaintenance(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(EquipmentStatus.MAINTENANCE);
-            equipmentDAO.save(equipment);
-        }
-    }
-    // ✅ MÉTHODES TECHNICIEN
-    public void updateEquipmentStatus(Long equipmentId, EquipmentStatus newStatus) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null) {
-            equipment.setStatus(newStatus);
-            equipmentDAO.save(equipment);
-        }
-    }
-
-    public List<Equipment> getEquipmentInMaintenance() {
-        return equipmentDAO.findByStatus(EquipmentStatus.MAINTENANCE);
-    }
-
-    public List<Equipment> getEquipmentWithIssues() {
-        return equipmentDAO.findByStatus(EquipmentStatus.PANNE);
-    }
-
-    public void markEquipmentAsFixed(Long equipmentId) {
-        Equipment equipment = equipmentDAO.findById(equipmentId);
-        if (equipment != null && equipment.getStatus() == EquipmentStatus.PANNE) {
-            equipment.setStatus(EquipmentStatus.AVAILABLE);
-            equipmentDAO.save(equipment);
-        }
-    }
-}

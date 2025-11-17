@@ -1,7 +1,6 @@
 package com.parcinformatique.model;
 
 public enum Role {
-    ADMIN,      // Accès complet
-    TECHNICIAN, // Accès limité (consultation + gestion statuts)
-    EMPLOYEE    // Consultation équipements affectés + déclarer pannes
+    ADMIN,
+    TECHNICIAN
 }
