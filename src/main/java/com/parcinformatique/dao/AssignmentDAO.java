@@ -20,4 +20,5 @@ public interface AssignmentDAO {
 
     // Vérifications métier
     boolean isEquipmentAvailable(Long equipmentId, LocalDate date);
+    boolean hasAnyAssignment(Long employeeId);
 }
