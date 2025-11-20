@@ -102,12 +102,10 @@
                     <table class="table table-striped table-hover">
                         <thead class="table-dark">
                             <tr>
-                                <th>ID</th>
                                 <th>Équipement</th>
                                 <th>Employé</th>
                                 <th>Date Affectation</th>
                                 <th>Date Retour</th>
-                                <th>Durée</th>
                                 <th>Statut</th>
                                 <th>Actions</th>
                             </tr>
@@ -115,7 +113,6 @@
                         <tbody>
                             <c:forEach var="assignment" items="${assignments}">
                                 <tr>
-                                    <td>#${assignment.id}</td>
                                     <td>
                                         <strong>${assignment.equipment.name}</strong>
                                         <br><small class="text-muted">
@@ -139,21 +136,6 @@
                                             <c:otherwise>
                                                 <span class="badge bg-warning text-dark">
                                                     <i class="fas fa-clock"></i> En cours
-                                                </span>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${assignment.returnDate != null}">
-                                                <!-- Calcul de la durée pourrait être fait côté Java -->
-                                                <span class="badge bg-info">
-                                                    <i class="fas fa-hourglass-half"></i> Calculer
-                                                </span>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="badge bg-warning text-dark">
-                                                    <i class="fas fa-infinity"></i> En cours
                                                 </span>
                                             </c:otherwise>
                                         </c:choose>
@@ -254,8 +236,6 @@
                                                                 <p class="text-muted fst-italic">Aucune note</p>
                                                             </c:otherwise>
                                                         </c:choose>
-
-
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
@@ -269,7 +249,7 @@
 
                             <c:if test="${empty assignments}">
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted py-5">
+                                    <td colspan="6" class="text-center text-muted py-5">
                                         <i class="fas fa-inbox fa-3x mb-3 d-block"></i>
                                         <h5>Aucun historique trouvé</h5>
                                         <p>Aucune affectation ne correspond à vos critères de recherche.</p>
@@ -277,6 +257,7 @@
                                 </tr>
                             </c:if>
                         </tbody>
+
                     </table>
                 </div>
             </div>

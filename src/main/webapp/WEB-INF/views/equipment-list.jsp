@@ -1,4 +1,3 @@
-<%-- 📁 src/main/webapp/WEB-INF/views/equipment-list.jsp --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="com.parcinformatique.model.EquipmentStatus" %>
@@ -31,9 +30,19 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2><i class="fas fa-laptop"></i> Gestion des Équipements</h2>
             <div>
-                <a href="equipments?action=available" class="btn btn-outline-success me-2">
-                    <i class="fas fa-check-circle"></i> Voir disponibles
-                </a>
+                <c:choose>
+                    <c:when test="${showOnlyAvailable}">
+                        <a href="${pageContext.request.contextPath}/equipments?action=" class="btn btn-secondary me-2">
+                            <i class="fas fa-list"></i> Tous les Equipements
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/equipments?action=available" class="btn btn-outline-success me-2">
+                            <i class="fas fa-check-circle"></i> Voir Disponibles
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+
                 <a href="equipments?action=new" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Nouvel équipement
                 </a>
@@ -115,7 +124,7 @@
                                                             <i class="fas fa-tools"></i> Maintenance
                                                         </span>
                                                     </c:when>
-                                                    <c:when test="${equipment.status == EquipmentStatus.OUT_OF_ORDER}">
+                                                    <c:when test="${equipment.status == EquipmentStatus.OUT_OF_SERVICE}">
                                                         <span class="badge bg-danger">
                                                             <i class="fas fa-times-circle"></i> Hors service
                                                         </span>

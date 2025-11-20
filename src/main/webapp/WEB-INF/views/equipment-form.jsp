@@ -122,7 +122,7 @@
                                                         <c:when test="${statusValue == EquipmentStatus.MAINTENANCE}">
                                                             🔧 En maintenance
                                                         </c:when>
-                                                        <c:when test="${statusValue == EquipmentStatus.OUT_OF_ORDER}">
+                                                        <c:when test="${statusValue == EquipmentStatus.OUT_OF_SERVICE}">
                                                             ✗ Hors service
                                                         </c:when>
                                                         <c:when test="${statusValue == EquipmentStatus.RESERVED}">

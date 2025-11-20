@@ -42,11 +42,20 @@
                 <a href="${pageContext.request.contextPath}/assignments/new" class="btn btn-success me-2">
                     <i class="fas fa-plus"></i> Nouvelle Affectation
                 </a>
-                <c:if test="${!isActiveView}">
-                    <a href="${pageContext.request.contextPath}/assignments/active" class="btn btn-primary me-2">
-                        <i class="fas fa-play-circle"></i> Affectations Actives
-                    </a>
-                </c:if>
+                <c:choose>
+                    <c:when test="${showOnlyAvailable}">
+                        <a href="equipments?action=" class="btn btn-secondary me-2">
+                            <i class="fas fa-list"></i> Tous les Equipements
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="equipments?action=available" class="btn btn-outline-success me-2">
+                            <i class="fas fa-check-circle"></i> Voir Disponibles
+                        </a>
+                    </c:otherwise>
+                </c:choose>
+
+
                 <a href="${pageContext.request.contextPath}/assignments/history" class="btn btn-info">
                     <i class="fas fa-history"></i> Historique
                 </a>

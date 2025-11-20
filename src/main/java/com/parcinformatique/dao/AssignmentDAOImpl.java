@@ -132,4 +132,17 @@ public class AssignmentDAOImpl implements AssignmentDAO {
             return query.getResultList();
         }
     }
+
+    public boolean hasAnyAssignment(Long employeeId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Long count = session.createQuery(
+                            "SELECT COUNT(a) FROM Assignment a WHERE a.employee.id = :employeeId",
+                            Long.class
+                    ).setParameter("employeeId", employeeId)
+                    .uniqueResult();
+
+            return count != null && count > 0;
+        }
+    }
+
 }

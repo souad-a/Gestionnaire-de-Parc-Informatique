@@ -1,5 +1,7 @@
 package com.parcinformatique.service;
 
+import com.parcinformatique.dao.AssignmentDAO;
+import com.parcinformatique.dao.AssignmentDAOImpl;
 import com.parcinformatique.dao.EmployeeDAO;
 import com.parcinformatique.model.Employee;
 
@@ -65,12 +67,19 @@ public class EmployeeService {
     }
 
     public void deleteEmployee(Long id) {
-        Employee employee = getEmployeeById(id);
+        AssignmentDAO assignmentDAO = new AssignmentDAOImpl();
 
+        // Vérifier s’il a au moins une affectation (active ou non)
+        if (assignmentDAO.hasAnyAssignment(id)) {
+            throw new IllegalArgumentException(
+                    "Impossible de supprimer cet employé car il possède au moins une affectation."
+            );
+        }
 
-
+        // Supprimer l’employé (ancienne méthode delete)
         employeeDAO.delete(id);
     }
+
     public List<String> getAllDepartments() {
         return employeeDAO.findAllDepartments();
     }
